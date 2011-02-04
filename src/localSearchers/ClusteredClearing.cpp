@@ -1,6 +1,6 @@
 /*
     ClusteredClearing
-    Copyright (C) 2011  Rafael Durán Castañeda
+    Copyright (C) 2011  rafadurancastaenda@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,12 +27,8 @@ ClusteredClearing::ClusteredClearing(int nOff, int popSize, int dimension, int
   numMates, pamNass, rtsNass, ff, random){
 
    this->_clRadius = clRadius;
-   this->_nOffspring = nOff;
   
    _cluster = new int[popSize];
-   
-   //this->writeResults(0,0,2,"pinicial");
-  
 }
 
 ClusteredClearing::ClusteredClearing(int nOff, int popSize, int dimension,
@@ -41,10 +37,8 @@ ClusteredClearing::ClusteredClearing(int nOff, int popSize, int dimension,
   numMates, pamNass, rtsNass, ff, random){
    
    this->_clRadius = clRadius;
-   this->_nOffspring = nOff;
    
    _cluster = new int[popSize];
-  
 }
 
 ClusteredClearing::~ClusteredClearing(){
@@ -59,20 +53,13 @@ int ClusteredClearing::improve(char* s, double& fitness, int size,
    this->dimension = size;
    int cont = 0;
         
-   while ( numEvaluations < maxEvaluations && !this->hasConverged() ) {
+   while ( numEvaluations < maxEvaluations) {
       
       this->iterate();
       
       numEvaluations += _numEval;
       //cout << _numEval << endl;
       cont += _numEval;
-      
-      /*if(cont >= 10000){
-         this->writeResults(iRuns, current_nFEs + numEvaluations, fNumber,
-            name);
-         cont = 0;
-      }*/
-
    }
   
    fitness = this->fCL; // Guardamos el fitness obtenido
@@ -224,37 +211,34 @@ void ClusteredClearing::clearing() {
 
 void ClusteredClearing::iterate( ) {
    
-   _cs.clear();
-   
    for(int i = 0; i < popSize; i++)
       _cluster[i] = -1;
-   
-   clearing();
       
-   offspring = new char *[_cs.size()*_nOffspring];
-   fOffspring = new double[_cs.size()*_nOffspring];
-   _numEval = _cs.size()*_nOffspring;
+   clearing();
    
    // Offspring generation
    for(int i = 0; i < _cs.size(); i++){
-      for(int j = i * _nOffspring; j < (i * _nOffspring) + _nOffspring; j++) {
+      while(_cs[i].numProtected < dimension) {
+         Off newOff;
+         
+         newOff.genotype = new char[dimension];        
+
          char **mates = new char * [ numMates ];
          
          // PAM Selection
          for ( int k = 0; k < numMates; k++ ) {
-            int ind = _cs[i].cIndex;
             int selected = this->pamSelection( this->pamNass,
-               population[ind], this->dimension);
+               population[_cs[i].cIndex], this->dimension);
             mates[ k ] = this->population[ selected ];
          }
          
-         // MULTIPARENT UNIFORM CROSSOVER
-         offspring[j] = new char[dimension];
-                
-         this->crossMUX( this->probMUX, _cs[i], mates, numMates, offspring[j],
-            this->dimension );
-            
-         fOffspring[j] = ff->fitness(offspring[j]);
+         // MULTIPARENT UNIFORM CROSSOVER         
+         this->crossMUX( this->probMUX, _cs[i], mates, numMates,
+            newOff.genotype, this->dimension );
+                    
+         newOff.fitness = ff->fitness(newOff.genotype);
+        
+         _offsprings.push_back(newOff);
          
          delete [] mates;
       }
@@ -262,22 +246,32 @@ void ClusteredClearing::iterate( ) {
    
    // Offsrping replacement
    clusteredClearingReplacement();
+  
+   _numEval = _offsprings.size();
    
+   for(int i = 0; i < _offsprings.size(); i++){
+      delete _offsprings[i].genotype;
+   }
+   
+   _cs.clear();
+   _offsprings.clear();
 }
 
 void ClusteredClearing::clusteredClearingReplacement() {
-   for(int i = 0; i < _numEval; i++){
+   for(int i = 0; i < _offsprings.size(); i++){
       int index = searchReplaced();
-      int offCluster = searchCluster(offspring[i]);
+      
+      int offCluster = searchCluster(_offsprings[i].genotype);
           
       
       if((_cluster[index]!=-2)  && (_cluster[index] == offCluster) &&
-         (fValues[index] < fOffspring[i])){
+         (fValues[index] < _offsprings[i].fitness)){
         // cout << " Not centroid, same cluster " << endl;
          //cout << index << endl;
          
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
-         fValues[index] = fOffspring[i];
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
+         fValues[index] = _offsprings[i].fitness;
          //cout << "Sale" << endl;
       } else if((_cluster[index]!=-2) && (offCluster != -1)){
          //cout << " Not centroid, different existent cluster " << endl;
@@ -285,15 +279,17 @@ void ClusteredClearing::clusteredClearingReplacement() {
          _cs[_cluster[index]].size--;
          _cluster[index] = offCluster;
          //cout << index << endl;
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
-         fValues[index] = fOffspring[i];
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
+         fValues[index] = _offsprings[i].fitness;
       } else if((_cluster[index]!=-2) && (-1 == offCluster)) {
          //cout << " Not centroid, different new cluster " << endl;
          _cs[_cluster[index]].size--;
          //cout << index << endl;
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
          //cout << "sale if" << endl;
-         fValues[index]=fOffspring[i];
+         fValues[index]=_offsprings[i].fitness;
          
          _cluster[index] = -2;
          
@@ -308,33 +304,33 @@ void ClusteredClearing::clusteredClearingReplacement() {
          while((_cs[j].size == 0) || (_cs[j].cIndex != index))
            j++;
          _cs[j].size = 0;
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
-         fValues[index] = fOffspring[i];
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
+         fValues[index] = _offsprings[i].fitness;
          Cluster dummy;
          dummy.cIndex = index;
          dummy.size = 1;
          _cs.push_back(dummy);
       } else if((_cluster[index]==-2)  && (index == _cs[offCluster].cIndex) &&
-         (fValues[index] < fOffspring[i])) {
+         (fValues[index] < _offsprings[i].fitness)) {
          //cout << "Centroid same cluster -> just replace" << endl;
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
-         fValues[index] = fOffspring[i];
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
+         fValues[index] = _offsprings[i].fitness;
       } else if((_cluster[index]==-2) && (index != _cs[offCluster].cIndex)) {
          //cout << " Centroid different existent cluster " <<
          //_cs[offCluster].cIndex << " " << _cluster[index] <<endl;
-         memcpy( population[index], offspring[i], dimension * sizeof(char));
-         fValues[index] = fOffspring[i];
+         memcpy( population[index], _offsprings[i].genotype, dimension *
+            sizeof(char));
+         fValues[index] = _offsprings[i].fitness;
          _cluster[index] = offCluster;
           _cs[offCluster].size++;
          int j = 0;
          while((_cs[j].size == 0) || (_cs[j].cIndex != index))
             j++;
-         //cout << j << endl;
          _cs[j].size = 0;
       }
    }
-   
-   //cout << "sale" << endl;
 }
 int ClusteredClearing::searchCluster(char *gen){
    double dis; 
@@ -348,11 +344,11 @@ int ClusteredClearing::searchCluster(char *gen){
    
    
    while((dis > _clRadius) && (cont < _cs.size())){
-      cont++;
       if(_cs[cont].size > 0){
          index = cont;
          dis = ff->distance(gen, population[_cs[cont].cIndex]);
       }
+      cont++;
    }
    
    if(dis > _clRadius)
@@ -368,8 +364,6 @@ int ClusteredClearing::searchReplaced() {
    while(_cs[cont].size == 0)
       cont++;
    
-   //cout << "cont "<< cont << endl;
-   
    cluster = cont;
    rValueMin = fValues[_cs[cont].cIndex]/(_cs[cont].size * _cs[cont].size);
   
@@ -383,8 +377,6 @@ int ClusteredClearing::searchReplaced() {
          }
       }
    }
-   
-   //cout << "cluster " << cluster <<  " size " << _cs.size() << endl;
  
    // Look for individual to replace
    if(_cs[cluster].size == 1){
@@ -409,18 +401,11 @@ int ClusteredClearing::searchWorst(int cluster) {
          }
       }
    
-   //cout << "i " << i << " cluster " << cluster << " size " <<
-//_cs[cluster].size <<  endl;
-      
-   //for(int k = 0; k < popSize; k++)
-      //cout << _cluster[k] << endl;
-   
    indexMin = i;
    fMin = fValues[i];
    
    for(int j = i+1; j < popSize; j++){
-      if(_cluster[j] == cluster /*|| (_cluster[j] == -2 && _cs[cluster].cIndex
-         == j)*/){
+      if(_cluster[j] == cluster){
          if(fValues[j] < fMin){
             fMin = fValues[j];
             indexMin = j;

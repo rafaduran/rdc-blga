@@ -4,7 +4,7 @@
 // Description:
 //
 //
-// Author: rdc,,, <rdc_120@hotmail.com>, (C) 2008
+// Author: rdc,,, rafadurancastaneda@gmail.com, (C) 2008
 //
 // Copyright: See COPYING file that comes with this distribution
 //

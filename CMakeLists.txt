@@ -26,6 +26,6 @@ set(FITNESS ./src/carlosFitnessFunctions/FitnessFunction.cpp
   
 set(RANDOM ./src/carlosFitnessFunctions/Random.cpp)
 
-ADD_EXECUTABLE(main ${FITNESS} ${SEARCHER} blgaMain.cpp)
+ADD_EXECUTABLE(blga ${FITNESS} ${SEARCHER} blgaMain.cpp)
 
 ADD_EXECUTABLE(peakgen ${RANDOM} ./src/carlosFitnessFunctions/peakGen/peakGenMain.cpp)
