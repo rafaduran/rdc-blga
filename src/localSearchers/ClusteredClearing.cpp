@@ -29,6 +29,8 @@ ClusteredClearing::ClusteredClearing(int nOff, int popSize, int dimension, int
    this->_clRadius = clRadius;
   
    _cluster = new int[popSize];
+   
+   this->writeResults(2, 0, 2, "pinicial");
 }
 
 ClusteredClearing::ClusteredClearing(int nOff, int popSize, int dimension,
@@ -58,8 +60,10 @@ int ClusteredClearing::improve(char* s, double& fitness, int size,
       this->iterate();
       
       numEvaluations += _numEval;
-      //cout << _numEval << endl;
-      cont += _numEval;
+      cont ++;
+      
+      this->writeResults(iRuns, numEvaluations, fNumber, name);
+      cout << "Número de eval en iteración " << cont << ":" << _numEval << endl;
    }
   
    fitness = this->fCL; // Guardamos el fitness obtenido
@@ -215,6 +219,8 @@ void ClusteredClearing::iterate( ) {
       _cluster[i] = -1;
       
    clearing();
+   
+   cout << "Número de clusters:" << _cs.size() << endl;
    
    // Offspring generation
    for(int i = 0; i < _cs.size(); i++){
