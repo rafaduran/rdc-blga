@@ -1,7 +1,4 @@
 %{
-//#include <stdio.h>
-//#include <string.h>
-//#include <math.h>
 #include <iostream>
 #include <sstream>
 #include <fstream>
@@ -27,8 +24,11 @@ char *cabeceraFPicos;
 
 double distancia(double *p1, double *p2);
 void cargaPicos(char *filename, int numRun);
+void cargaPicos(char *filename);
 
-ofstream out("archivo",ios::app);
+char MULTI_PEAKS_FILES = 1;
+
+ofstream out;
 %}
 
 DIGIT [0-9]
@@ -47,46 +47,42 @@ CELL	\"[^\"]+\"
 	pchr=strchr(yytext,':');
 	pchr='\0';
 	currentRun = atoi(yytext);
-  //cout << currentRun << endl;
-	cargaPicos(cabeceraFPicos, currentRun);
+   if(MULTI_PEAKS_FILES)
+      cargaPicos(cabeceraFPicos, currentRun);
 }
 
 -+ {}
 		
 ^{NUMBER}	{currentDimension=0;}
 {NUMBER}	{
-    //cout << "numero" << endl;
-		currentSol[currentDimension] = atof(yytext);
-		currentDimension++;
+   currentSol[currentDimension] = atof(yytext);
+	currentDimension++;
 		
-		if(currentDimension == dimension){
+	if(currentDimension == dimension){
 	
-			for (int i = 0; i < numPicos; i++){
-				
-				if (distancia(currentSol, picos[i]) <= precision)
-					picosObtenidos[i] = 1;
-			}
+      for (int i = 0; i < numPicos; i++){
+         if (distancia(currentSol, picos[i]) <= precision)
+            picosObtenidos[i] = 1;
 		}
+	}
 }
 
-Run		{
+Run {
 			
-			if (primeralinea == 0){
-				int suma = 0;
+   if (primeralinea == 0){
+      int suma = 0;
 		
-				for (int i = 0; i < numPicos; i++)
-					suma += picosObtenidos[i];
+      for (int i = 0; i < numPicos; i++)
+         suma += picosObtenidos[i];
 					
-				out << endl << "\t" << suma << " picos obtenidos" << endl;
-				sumaGlobal += suma;
-				numRuns++;
+      out << endl << "\t" << suma << " picos obtenidos" << endl;
+      sumaGlobal += suma;
+      numRuns++;
 				
-				for (int i = 0; i < numPicos; i++)
-					picosObtenidos[i]=0;
-			}
-			
-			//cout << "Run" << endl;
-			primeralinea = 0;
+      for (int i = 0; i < numPicos; i++)
+         picosObtenidos[i]=0;
+	}
+	primeralinea = 0;
 }
 
 \n	{}
@@ -101,13 +97,23 @@ void cargaPicos(char *filename, int numRun){
 
 		for (int j = 0; j < dimension; j++){
 			entrada >> picos[i][j];
-			//cout << picos[i][j] << ",";
 		}
-		
-		//cout << endl;
 	}
 	
 	entrada.close();
+}
+
+void cargaPicos(char *filename){
+   ifstream entrada(filename, ios::in);
+   
+   for (int i = 0; i < numPicos; i++){
+
+      for (int j = 0; j < dimension; j++){
+         entrada >> picos[i][j];
+      }
+   }
+   
+   entrada.close();
 }
 
 double distancia(double *p1, double *p2){
@@ -124,15 +130,20 @@ double distancia(double *p1, double *p2){
 
 main(int argc, char **argv){
 
-	if (argc < 6){
-		cout << argv[0] << " <precisión> <numPicos> <dimension> <cabeceraFicherosPicos> <ficheroResultados>" << endl;
+	if (argc < 6 || argc > 8){
+		cout << argv[0] << " <precisión> <numPicos> <dimension>" <<
+         " <[-]cabeceraFicherosPicos> <ficheroResultados> [<fichero_salida>]" <<
+         endl;
 		cout << "\t<dimension> es el número de variables reales" << endl;
+      cout << "\t <[-]cabeceraFicherosPicos> si la cabecera comienza por guión "
+         << " se considerá un único fichero de picos para todas las ejecuciones"
+         << endl;
 		return 0;
-	}
-
-  //cout << "algo" << endl;
-	
-  //ofstream out("archivo",ios::app);
+	} else if(argc == 6){
+      out.open("picos_hump.txt",ios::app);
+   } else {
+      out.open(argv[6],ios::app);
+   }
 
 	precision = atof(argv[1]);
 	numPicos = atoi(argv[2]);
@@ -143,6 +154,12 @@ main(int argc, char **argv){
 		picos[i] = new double[dimension];
 	
 	cabeceraFPicos = argv[4];
+   
+   if(cabeceraFPicos[0] == '-'){
+      MULTI_PEAKS_FILES = 0;
+      cargaPicos(cabeceraFPicos+1);
+   }
+   
 	char *fileResults = argv[5];
 	yyin = fopen(fileResults, "r");
 	primeralinea = 1;
@@ -162,7 +179,7 @@ main(int argc, char **argv){
 	for (int i = 0; i < numPicos; i++)
 		suma += picosObtenidos[i];
 					
-	out << endl << suma << " picos obtenidos" << endl;
+	out << endl << "\t" << suma << " picos obtenidos" << endl;
 	sumaGlobal += suma;
 	numRuns++;
 
@@ -175,7 +192,7 @@ main(int argc, char **argv){
 	delete [] picos;
 	delete [] picosObtenidos;
 	fclose(yyin);
-  out.close();
+   out.close();
 	return 0;
 }
 
