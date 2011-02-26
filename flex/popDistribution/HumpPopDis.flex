@@ -28,7 +28,6 @@ char *cabeceraFPicos;
 double distancia(double *p1, double *p2);
 void cargaPicos(char *filename, int numRun);
 
-//ofstream out("archivo",ios::app);
 ofstream nichos("nichos.txt",ios::app);
 %}
 
