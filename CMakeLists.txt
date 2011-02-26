@@ -1,6 +1,25 @@
+###############################################################################
+#    CMakeLists.txt for CMake project rdc-blga                                #
+#    Copyright (C) 2011  rafadurancastaneda@gmail.com                         #
+#                                                                             #
+#    This program is free software: you can redistribute it and/or modify     #
+#    it under the terms of the GNU General Public License as published by     #
+#    the Free Software Foundation, either version 3 of the License, or        #
+#    (at your option) any later version.                                      #
+#                                                                             #
+#    This program is distributed in the hope that it will be useful,          #
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of           #
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            #
+#    GNU General Public License for more details.                             #
+#                                                                             #
+#    You should have received a copy of the GNU General Public License        #
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.     #
+###############################################################################
+
+
 cmake_minimum_required(VERSION 2.8.0)
 
-PROJECT(main)
+PROJECT(rdc-blga)
 
 # uninstall target
 configure_file(
@@ -39,49 +58,38 @@ set(FITNESS ./src/carlosFitnessFunctions/FitnessFunction.cpp
 
 SET(FLEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flex)
 
-SET(peak_number_dir ${FLEX_DIR}/peakNumber)
+SET(PEAK_NUMBER_DIR ${FLEX_DIR}/peakNumber)
 
-SET(pop_dis_dir ${FLEX_DIR}/popDistribution)
+SET(POP_DIS_DIR ${FLEX_DIR}/popDistribution)
 
-SET(pro_res_dir ${FLEX_DIR}/processResultFiles)
+SET(PRO_RES_DIR ${FLEX_DIR}/processResultFiles)
 
-SET(FLEX_TARGETS PeakNumP1 PeakNumP2 PeakNumHump P1PopDis P2PopDis HumpPopDis
-   ProcessToWxMaxima)
+SET(FLEX_TARGETS PeakCounter P1PopDis P2PopDis HumpPopDis ProcessToWxMaxima)
   
 set(RANDOM ./src/carlosFitnessFunctions/Random.cpp)
 
-FLEX_TARGET(PeakNumberP1Scan ${peak_number_dir}/PeakNumP1.flex
-                             ${FLEX_DIR}/PeakNumP1.cpp)
+FLEX_TARGET(PeakCounterScan ${PEAK_NUMBER_DIR}/PeakCounter.flex
+                            ${FLEX_DIR}/PeakCounter.cpp)
 
-FLEX_TARGET(PeakNumberP2Scan ${peak_number_dir}/PeakNumP2.flex 
-                             ${FLEX_DIR}/PeakNumP2.cpp)
-
-FLEX_TARGET(PeakNumberHumpScan ${peak_number_dir}/PeakNumHump.flex
-                               ${FLEX_DIR}/PeakNumHump.cpp)
-
-FLEX_TARGET(P1PopDisScan ${pop_dis_dir}/P1PopDis.flex 
+FLEX_TARGET(P1PopDisScan ${POP_DIS_DIR}/P1PopDis.flex 
                          ${FLEX_DIR}/P1PopDis.cpp)
 
-FLEX_TARGET(P2PopDisScan ${pop_dis_dir}/P2PopDis.flex 
+FLEX_TARGET(P2PopDisScan ${POP_DIS_DIR}/P2PopDis.flex 
                          ${FLEX_DIR}/P2PopDis.cpp)
 
-FLEX_TARGET(HumpPopDisScan ${pop_dis_dir}/HumpPopDis.flex 
+FLEX_TARGET(HumpPopDisScan ${POP_DIS_DIR}/HumpPopDis.flex 
                            ${FLEX_DIR}/HumpPopDis.cpp)
 
-FLEX_TARGET(ProP1P2ResScan ${pro_res_dir}/ProcessP1P2Results.flex
+FLEX_TARGET(ProP1P2ResScan ${PRO_RES_DIR}/ProcessP1P2Results.flex
                            ${FLEX_DIR}/ProcessP1P2Results.cpp)
             
-FLEX_TARGET(ProHumpResScan ${pro_res_dir}/ProcessHumpResults.flex
+FLEX_TARGET(ProHumpResScan ${PRO_RES_DIR}/ProcessHumpResults.flex
                            ${FLEX_DIR}/ProcessHumpResults.cpp)
 
-FLEX_TARGET(ProToMaximaScan ${pro_res_dir}/ProcessToWxMaxima.flex
+FLEX_TARGET(ProToMaximaScan ${PRO_RES_DIR}/ProcessToWxMaxima.flex
                             ${FLEX_DIR}/ProcessToWxMaxima.cpp)
 
-ADD_EXECUTABLE(PeakNumP1 ${FLEX_PeakNumberP1Scan_OUTPUTS})
-
-ADD_EXECUTABLE(PeakNumP2 ${FLEX_PeakNumberP2Scan_OUTPUTS})
-
-ADD_EXECUTABLE(PeakNumHump ${FLEX_PeakNumberHumpScan_OUTPUTS})
+ADD_EXECUTABLE(PeakCounter ${FLEX_PeakCounterScan_OUTPUTS})
 
 ADD_EXECUTABLE(P1PopDis ${FLEX_P1PopDisScan_OUTPUTS})
 
