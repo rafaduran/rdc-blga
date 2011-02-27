@@ -48,7 +48,7 @@ using namespace std;
 
 int main(int argc, char **argv) {
     if(argc < 8){
-       cout << "Wrong arguments: main filename numRuns nVariables nPeaks radius"
+       cout << "Wrong arguments: peakGen filename numRuns nVariables nPeaks radius"
             << " height alpha" << endl;
        return 0;
     }

@@ -45,6 +45,7 @@ set(SEARCHER ./src/localSearchers/Blga.cpp
              ./src/localSearchers/LocalSearcher.cpp
   )
 
+
 set(FITNESS ./src/carlosFitnessFunctions/FitnessFunction.cpp
             ./src/carlosFitnessFunctions/FitnessStopC.cpp
             ./src/carlosFitnessFunctions/HumpFunction.cpp
@@ -64,21 +65,15 @@ SET(POP_DIS_DIR ${FLEX_DIR}/popDistribution)
 
 SET(PRO_RES_DIR ${FLEX_DIR}/processResultFiles)
 
-SET(FLEX_TARGETS PeakCounter P1PopDis P2PopDis HumpPopDis ProcessToWxMaxima)
+SET(FLEX_TARGETS PeakCounter PopDistribution ProcessToWxMaxima)
   
 set(RANDOM ./src/carlosFitnessFunctions/Random.cpp)
 
 FLEX_TARGET(PeakCounterScan ${PEAK_NUMBER_DIR}/PeakCounter.flex
                             ${FLEX_DIR}/PeakCounter.cpp)
 
-FLEX_TARGET(P1PopDisScan ${POP_DIS_DIR}/P1PopDis.flex 
-                         ${FLEX_DIR}/P1PopDis.cpp)
-
-FLEX_TARGET(P2PopDisScan ${POP_DIS_DIR}/P2PopDis.flex 
-                         ${FLEX_DIR}/P2PopDis.cpp)
-
-FLEX_TARGET(HumpPopDisScan ${POP_DIS_DIR}/HumpPopDis.flex 
-                           ${FLEX_DIR}/HumpPopDis.cpp)
+FLEX_TARGET(PopDisScan ${POP_DIS_DIR}/PopDistribution.flex
+                           ${FLEX_DIR}/PopDistribution.cpp)
 
 FLEX_TARGET(ProP1P2ResScan ${PRO_RES_DIR}/ProcessP1P2Results.flex
                            ${FLEX_DIR}/ProcessP1P2Results.cpp)
@@ -91,11 +86,7 @@ FLEX_TARGET(ProToMaximaScan ${PRO_RES_DIR}/ProcessToWxMaxima.flex
 
 ADD_EXECUTABLE(PeakCounter ${FLEX_PeakCounterScan_OUTPUTS})
 
-ADD_EXECUTABLE(P1PopDis ${FLEX_P1PopDisScan_OUTPUTS})
-
-ADD_EXECUTABLE(P2PopDis ${FLEX_P2PopDisScan_OUTPUTS})
-
-ADD_EXECUTABLE(HumpPopDis ${FLEX_HumpPopDisScan_OUTPUTS})
+ADD_EXECUTABLE(PopDistribution ${FLEX_PopDisScan_OUTPUTS})
 
 ADD_EXECUTABLE(ProcessP1P2Results ${FLEX_ProP1P2ResScan_OUTPUTS})
 

@@ -12,6 +12,10 @@ int dimension;
 double **picos;
 int *picosObtenidos;
 
+int *individuos_totales;
+double *distancia_total;
+
+
 double *currentSol;
 int currentDimension;
 
@@ -26,6 +30,8 @@ double distancia(double *p1, double *p2);
 void cargaPicos(char *filename, int numRun);
 void cargaPicos(char *filename);
 
+void resumen();
+
 char MULTI_PEAKS_FILES = 1;
 
 ofstream out;
@@ -37,54 +43,69 @@ NUMBER -?(({INTEGER}(("."{INTEGER})|".")?)|("."{INTEGER}))((e|E)(\+|-)?{INTEGER}
 
 EMPTYCELL \"\ \"
 CELLNUMBER \"([^\"]*[ \t\'])?{NUMBER}+[^\"]*\"
-CELL	\"[^\"]+\"
+CELL  \"[^\"]+\"
 
 %%
 
-{NUMBER}:{NUMBER}	{
-	out << yytext;
-	char *pchr;
-	pchr=strchr(yytext,':');
-	pchr='\0';
-	currentRun = atoi(yytext);
+{NUMBER}:{NUMBER} {
+   out << yytext << endl;
+   char *pchr;
+   pchr=strchr(yytext,':');
+   pchr='\0';
+   currentRun = atoi(yytext);
    if(MULTI_PEAKS_FILES)
       cargaPicos(cabeceraFPicos, currentRun);
 }
 
 -+ {}
-		
+
 ^{NUMBER}   {currentDimension=0;}
 {NUMBER} {
-   currentSol[currentDimension] = atof(yytext);
-   currentDimension++;
+      currentSol[currentDimension] = atof(yytext);
+      currentDimension++;
 
-   if(currentDimension == dimension){
-
-      for (int i = 0; i < numPicos; i++){
-         if (distancia(currentSol, picos[i]) <= precision)
-            picosObtenidos[i] = 1;
+      if(currentDimension == dimension){
+         double daux, dmin = distancia(currentSol, picos[0]);
+         int imin = 0;
+         for (int i = 1; i < numPicos; i++){
+            daux=distancia(currentSol, picos[i]);
+            if (daux < dmin){
+               imin = i;
+               dmin = daux;
+                }
+         }
+         // Aquí imprimimos el pico más cercano y la distancia
+         //out << imin << " " << dmin << endl;
+         distancia_total[imin] += dmin;
+         individuos_totales[imin]++;
       }
-   }
 }
 
-Run {
-   if (primeralinea == 0){
-      int suma = 0;
+Run      {
+         if (primeralinea == 0){
+            int suma = 0;
+            for (int i = 0; i < numPicos; i++)
+               suma += picosObtenidos[i];
 
-      for (int i = 0; i < numPicos; i++)
-         suma += picosObtenidos[i];
+            sumaGlobal += suma;
+            numRuns++;
 
-      out << endl << "\t" << suma << " picos obtenidos" << endl;
-      sumaGlobal += suma;
-      numRuns++;
+            for (int i = 0; i < numPicos; i++)
+               picosObtenidos[i]=0;
 
-      for (int i = 0; i < numPicos; i++)
-         picosObtenidos[i]=0;
-   }
-   primeralinea = 0;
+            // Mostramos individuos en cada pico y distancia media
+
+            resumen();
+            for(int i = 0; i < numPicos; i++) {
+               individuos_totales[i] = 0;
+               distancia_total[i] = 0;
+            }
+         }
+
+         primeralinea = 0;
 }
 
-\n	{}
+\n {}
 %%
 
 void cargaPicos(char *filename, int numRun){
@@ -94,8 +115,8 @@ void cargaPicos(char *filename, int numRun){
 
    for (int i = 0; i < numPicos; i++){
 
-   for (int j = 0; j < dimension; j++){
-      entrada >> picos[i][j];
+      for (int j = 0; j < dimension; j++){
+         entrada >> picos[i][j];
       }
    }
 
@@ -104,18 +125,19 @@ void cargaPicos(char *filename, int numRun){
 
 void cargaPicos(char *filename){
    ifstream entrada(filename, ios::in);
-   
+
    for (int i = 0; i < numPicos; i++){
 
       for (int j = 0; j < dimension; j++){
          entrada >> picos[i][j];
       }
    }
-   
+
    entrada.close();
 }
 
 double distancia(double *p1, double *p2){
+
    double sumaCoordenadas = 0.;
 
    for (int i = 0; i < dimension; i++){
@@ -126,6 +148,15 @@ double distancia(double *p1, double *p2){
    return (sqrt(sumaCoordenadas));
 }
 
+void resumen(){
+   out << "Resumen para ejecución " << currentRun << endl;
+   for(int i = 0; i < numPicos; i++){
+      out << i << " " << individuos_totales[i] << "\t";
+      out << "Distancia media: " << distancia_total[i]/individuos_totales[i] << endl;
+   }
+
+}
+
 main(int argc, char **argv){
 
    if (argc < 6 || argc > 8){
@@ -133,16 +164,20 @@ main(int argc, char **argv){
          " <[-]cabeceraFicherosPicos> <ficheroResultados> [<fichero_salida>]" <<
          endl;
       cout << "\t<dimension> es el número de variables reales" << endl;
-      cout << "\t <[-]cabeceraFicherosPicos> si la cabecera comienza por guión "
+      cout << "\t<[-]cabeceraFicherosPicos> si la cabecera comienza por guión "
          << " se considerá un único fichero de picos para todas las ejecuciones"
-      << ", sino se buscará un fichero de picos para cada ejecución."
+         << ", sino se buscará\n\t un fichero de picos para cada ejecución."
          << endl;
-      return 0;
+         return 0;
    } else if(argc == 6){
-      out.open("picos.txt",ios::app);
+      out.open("distribution.txt",ios::app);
    } else {
       out.open(argv[6],ios::app);
    }
+
+   out.setf(ios::scientific,ios::floatfield);
+   out.precision(15);
+
 
    precision = atof(argv[1]);
    numPicos = atoi(argv[2]);
@@ -152,13 +187,21 @@ main(int argc, char **argv){
    for (int i = 0; i < numPicos; i++)
       picos[i] = new double[dimension];
 
+   individuos_totales = new int[numPicos];
+   distancia_total = new double[numPicos];
+
+   for(int i = 0; i < numPicos; i++){
+      individuos_totales[i] = 0;
+      distancia_total[i] = 0;
+   }
+
    cabeceraFPicos = argv[4];
-   
+
    if(cabeceraFPicos[0] == '-'){
       MULTI_PEAKS_FILES = 0;
       cargaPicos(cabeceraFPicos+1);
    }
-   
+
    char *fileResults = argv[5];
    yyin = fopen(fileResults, "r");
    primeralinea = 1;
@@ -170,20 +213,17 @@ main(int argc, char **argv){
    for (int i = 0; i < numPicos; i++)
       picosObtenidos[i]=0;
 
-   // Realizamos el análisis
    yylex();
 
    //LECTURA DE LA ÚLTIMA EJECUCIÓN
+   resumen();
    int suma = 0;
 
    for (int i = 0; i < numPicos; i++)
       suma += picosObtenidos[i];
 
-   out << endl << "\t" << suma << " picos obtenidos" << endl;
    sumaGlobal += suma;
    numRuns++;
-
-   out << endl << "Media de picos obtenidos: " << (sumaGlobal / numRuns) << endl;
 
    for (int i = 0; i < numPicos; i++)
       delete [] picos[i];
@@ -191,6 +231,9 @@ main(int argc, char **argv){
    delete [] currentSol;
    delete [] picos;
    delete [] picosObtenidos;
+   delete [] distancia_total;
+   delete [] individuos_totales;
+
    fclose(yyin);
    out.close();
    return 0;
