@@ -1,6 +1,6 @@
 /*
     ClusterdClearing
-    Copyright (C) 2011  Rafael Durán Castañeda
+    Copyright (C) 2011  rafadurancastaneda@gmail.com
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@
 #include <Blga.h>
 #include <vector>
 #include <string.h>
+
+struct Off{
+   char *genotype;
+   double fitness;
+};
 
 struct Cluster{
   int cIndex;  // Centroid index
@@ -48,12 +53,10 @@ class ClusteredClearing : public Blga {
       virtual void crossMUX(double probM, Cluster &clus, char **mates, int
          numMates, char *off, int size);
    private:
-      char **offspring;
-      double *fOffspring;
       int _numEval;  // Number evaluations made in last iteration
       vector <Cluster> _cs;  // Holds clusters information
+      vector <Off> _offsprings; // Holds offsprings information
       double _clRadius;   // Clearing radius
-      int _nOffspring; // Offspring number generated in each iteration
       void clearing(); // Clearing method
       int *_cluster;   /* Cluster index:
                         _cluster[i] = n -> 0 <= n <= number of clusters
