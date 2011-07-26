@@ -1,0 +1,8 @@
+.kdev4/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+build/
+cmake_install.cmake
+cmake_uninstall.cmake
+rdc-blga.kdev4
