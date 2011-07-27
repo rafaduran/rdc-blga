@@ -21,14 +21,20 @@ cmake_minimum_required(VERSION 2.8.0)
 
 PROJECT(sample-tests)
 
-include_directories (   ./gtest-1.6.0/include
-                        ./unittest)
+include_directories (./gtest-1.6.0/include
+                     ./unittest
+                     ../src/carlosFitnessFunctions)
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/gtest-1.6.0)
 
-SET(TESTS ./unittest/sample1.cc)
+#SET(TESTS ./unittest/sample1.cc)
+SET(FITNESS ../src/carlosFitnessFunctions/PeriodicEqual.cpp
+            ../src/carlosFitnessFunctions/FitnessFunction.cpp
+            ../src/carlosFitnessFunctions/HumpFunction.cpp
+            ../src/carlosFitnessFunctions/PeriodicUnequal.cpp
+   )
 
-ADD_EXECUTABLE(blga-tests ${TESTS} ./unittest/sample1_unittest.cc)
+ADD_EXECUTABLE(blga-tests ${FITNESS} ./unittest/fitnesstest.cpp)
 
 target_link_libraries(blga-tests gtest_main gtest)
 
