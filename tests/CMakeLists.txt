@@ -1,5 +1,5 @@
 ###############################################################################
-#    CMakeLists.txt for CMake project rdc-blga                                #
+#    CMakeLists.txt used by CMake project blga-tests                          #
 #    Copyright (C) 2011  rafadurancastaneda@gmail.com                         #
 #                                                                             #
 #    This program is free software: you can redistribute it and/or modify     #
@@ -19,7 +19,7 @@
 
 cmake_minimum_required(VERSION 2.8.0)
 
-PROJECT(sample-tests)
+PROJECT(blga-tests)
 
 include_directories (./gtest-1.6.0/include
                      ./unittest
@@ -27,18 +27,14 @@ include_directories (./gtest-1.6.0/include
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/gtest-1.6.0)
 
-#SET(TESTS ./unittest/sample1.cc)
 SET(FITNESS ../src/carlosFitnessFunctions/PeriodicEqual.cpp
             ../src/carlosFitnessFunctions/FitnessFunction.cpp
             ../src/carlosFitnessFunctions/HumpFunction.cpp
             ../src/carlosFitnessFunctions/PeriodicUnequal.cpp
    )
-ADD_EXECUTABLE(sample7 ./unittest/sample7_unittest.cc)
 
 ADD_EXECUTABLE(blga-tests ${FITNESS} ./unittest/fitnesstest.cpp)
 
 target_link_libraries(blga-tests gtest_main gtest)
-target_link_libraries(sample7 gtest_main gtest)
-
 
 ADD_TEST(unittest blga-tests)
