@@ -24,22 +24,16 @@
 using ::testing::TestWithParam;
 using ::testing::Values;
 
-// As a general rule, to prevent a test from affecting the tests that come
-// after it, you should create and destroy the tested objects for each test
-// instead of reusing them.  In this sample we will define a simple factory
-// function for PrimeTable objects.  We will instantiate objects in test's
-// SetUp() method and delete them in TearDown() method.
+
 typedef FitnessFunction* CreateFitnessFunc();
 
-template <size_t functionNumber>
+
+template <int functionNumber>
 FitnessFunction* CreateFitness() {
   return  FitnessFunction::getFitnessFunction(functionNumber);
 }
 
-// Inside the test body, fixture constructor, SetUp(), and TearDown() you
-// can refer to the test parameter by GetParam().  In this case, the test
-// parameter is a factory function which we call in fixture's SetUp() to
-// create and store an instance of PrimeTable.
+
 class FitnessTest : public TestWithParam<CreateFitnessFunc*> {
  public:
   virtual ~FitnessTest() { delete ff_; }
@@ -67,7 +61,14 @@ class FitnessTest : public TestWithParam<CreateFitnessFunc*> {
 };
 
 TEST_P(FitnessTest, GetDim) {
-  EXPECT_EQ(ff_->getDim(), P1_P2_dimension);
+  
+  if(strcmp(ff_->getName().str().data(), "Hump function")) {
+    EXPECT_EQ(ff_->getDim(), P1_P2_dimension);  // Not Hump function
+  }
+  else {
+    // Hump function
+    EXPECT_EQ(ff_->getDim(), ff_->getNvariables() * P1_P2_dimension);
+  }
 }
 
 TEST_P(FitnessTest, FitnessCompare) {
@@ -78,6 +79,6 @@ TEST_P(FitnessTest, FitnessCompare) {
 
 // factory functions:
 INSTANTIATE_TEST_CASE_P(
-    P1P2,
+    P1_2_3,
     FitnessTest,
-    Values(&CreateFitness<1>, &CreateFitness<0>));
+    Values(&CreateFitness<0>, &CreateFitness<1>, &CreateFitness<2>));
