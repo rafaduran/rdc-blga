@@ -70,3 +70,8 @@ double PeriodicUnequal::distance(char *firstGen,char *secondGen) {
   
   return abs(binaryToDouble(fbinary) - binaryToDouble(sbinary));
 }
+
+int PeriodicUnequal::getFunctionNumber(){
+
+  return 1;
+}

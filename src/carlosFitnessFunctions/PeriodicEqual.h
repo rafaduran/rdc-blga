@@ -30,9 +30,12 @@ class PeriodicEqual:public FitnessFunction {
 
     stringstream &getName(); /* Función usada para obtener el nombre de la
                                 función */
+                                
+    int getFunctionNumber();
 
     int getDim(); /* Función usada para obtener la dimensión de la cadena binaria 
                      de cada individuo */
+    
     
     double distance(char *firstGen,char *secondGen);
       // Función usada para calcular la distancia real entre dos individuos

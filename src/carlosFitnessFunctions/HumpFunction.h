@@ -51,6 +51,8 @@ class HumpFunction:public FitnessFunction {
                                                < 0 si f2 es mayor */
 
       stringstream &getName();   // Devuelve el nombre de la función
+      
+      int getFunctionNumber();
 
       int getDim();  /* Devuelve la dimensión total ( suma de la dimensión de
                         cada variable )*/

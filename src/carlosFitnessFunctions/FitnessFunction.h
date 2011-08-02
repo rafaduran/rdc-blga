@@ -35,6 +35,8 @@ class FitnessFunction {
    
       // Devuelve el nombre de la función
    	virtual stringstream &getName() = 0;
+        
+        virtual int getFunctionNumber() = 0 ;
 	
 	   // Devuelve la dimensión usada (longitud de las cadenas binarias)
 	   virtual int getDim() = 0;

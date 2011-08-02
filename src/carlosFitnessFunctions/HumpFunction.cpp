@@ -195,3 +195,8 @@ void HumpFunction::inverseGrayVector(char *gray, char *binary){
     }
   }
 }
+
+int HumpFunction::getFunctionNumber(){
+
+  return 2;
+}

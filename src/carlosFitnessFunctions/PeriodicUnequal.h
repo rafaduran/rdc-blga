@@ -31,6 +31,8 @@ class PeriodicUnequal:public FitnessFunction {
 
     stringstream &getName(); /* Función usada para obtener el nombre de la
                                 función */
+                                
+    int getFunctionNumber();
 
     int getDim(); /* Función usada para obtener la dimensión de la cadena binaria 
                      de cada individuo */
