@@ -15,13 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <cmath>
 
 #include <gtest/gtest.h>
+
 #include "FitnessFunction.h"
 #include "fitnesstest.h"
-#include <math.h>
-
-#define SIZE P1_P2_dimension
+#include "Random.h"
 
 using ::testing::TestWithParam;
 using ::testing::Values;
@@ -148,6 +148,70 @@ TEST_P(FitnessTest, Inversegray){
   delete binary;
 }
 
+TEST_P(FitnessTest, BinaryToDouble){
+  //Random *random = new Random();
+  
+  for(int i = 0; i < 3; i++ ){
+    for(int j = 0; j < dim_; j++){
+      switch(i){
+        case 0:
+          ind1_[j] = 0;
+          break;
+        case 1:
+          ind1_[j] = 1;
+          break;
+        case 2:
+          ind1_[j] = 1; //random->Randint(0,1);
+          break;
+      }
+    }
+    
+    switch(i) {
+      case 0:
+        if(ff_->getFunctionNumber() != 2) {
+          ASSERT_NEAR(ff_->binaryToDouble(ind1_),0.0, 1 / pow(2,dim_-1));
+        } else {
+          int nvariables = ff_->getNvariables();
+          double *vector = new double[nvariables];
+          ff_->binaryToDoubleVector(ind1_, vector);
+          for(int k = 0; k < nvariables; k++){
+            ASSERT_NEAR(vector[k], 0.0, 1 / pow(2,dim_-1));
+          }
+          delete vector;
+        }
+        break;
+      case 1:
+        if(ff_->getFunctionNumber() != 2) {
+          ASSERT_NEAR(ff_->binaryToDouble(ind1_),1.0, 1 / pow(2,dim_-1));
+        } else {
+          int nvariables = ff_->getNvariables();
+          double *vector = new double[nvariables];
+          ff_->binaryToDoubleVector(ind1_, vector);
+          for(int k = 0; k < nvariables; k++){
+            ASSERT_NEAR(vector[k], 1.0, 1 / pow(2,dim_-1));
+          }
+          delete vector;
+        }
+        break;
+      case 2:
+        if(ff_->getFunctionNumber() != 2) {
+          ind1_[0] = 0;
+          ASSERT_NEAR(ff_->binaryToDouble(ind1_),0.5, 1 / pow(2,dim_-1));
+        } else {
+          int nvariables = ff_->getNvariables();
+          for(int k = 0; k < nvariables; k++)
+            ind1_[k* dim_ / nvariables] = 0;
+          double *vector = new double[nvariables];
+          ff_->binaryToDoubleVector(ind1_, vector);
+          for(int k = 0; k < nvariables; k++){
+            ASSERT_NEAR(vector[k], 0.5, 1 / pow(2, (dim_ / nvariables) -1));
+          }
+          delete vector;
+        }
+        break;  
+    }
+  }
+}
 /*TEST_P(FitnessTest, Distance) {
   ASSERT_EQ(ff_->distance(ff_->inverseGray(ind1_),
     ff_->inverseGray(ind2_)), );
