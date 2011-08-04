@@ -24,22 +24,22 @@
 using namespace std;
 
 class FitnessFunction {
-	static FitnessFunction* ff;
-	
-   public:
+  static FitnessFunction* ff;
+  
+  public:
       // Calcula el fitness
       virtual double fitness(char *genes) = 0;
-
-	   //Devuelve un valor positivo si f1 es mejor que f2, negativo en otro caso
-	   virtual double compare(double f1, double f2) = 0;
+      
+      //Devuelve un valor positivo si f1 es mejor que f2, negativo en otro caso
+      virtual double compare(double f1, double f2) = 0;
    
       // Devuelve el nombre de la función
-   	virtual stringstream &getName() = 0;
+      virtual stringstream &getName() = 0;
         
-        virtual int getFunctionNumber() = 0 ;
-	
-	   // Devuelve la dimensión usada (longitud de las cadenas binarias)
-	   virtual int getDim() = 0;
+      virtual int getFunctionNumber() = 0 ;
+
+      // Devuelve la dimensión usada (longitud de las cadenas binarias)
+      virtual int getDim() = 0;
       
       // Devuelve la distancia real  
       virtual double distance(char *first, char *second) {return 0;};
@@ -49,10 +49,10 @@ class FitnessFunction {
       
       // Paso de binario a real                                  
       virtual double binaryToDouble(char *genes){ return 0;};
-	   
-	   /* Función estatica que permite la creación de todas las funciones de
-	      incluidas */
-	   static FitnessFunction* getFitnessFunction(int i, int numRun = 0);
+      
+      /* Función estatica que permite la creación de todas las funciones de
+         incluidas */
+      static FitnessFunction* getFitnessFunction(int i, int numRun = 0);
       
       // Función usada para obtener el número de variables  
       virtual int getNvariables() {return 1;};
