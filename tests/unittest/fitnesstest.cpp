@@ -41,21 +41,23 @@ class FitnessTest : public TestWithParam<CreateFitnessFunc*> {
   virtual ~FitnessTest() { delete ff_; }
   virtual void SetUp() { 
     ff_ = (*GetParam())();
-    _ind1 = new char[SIZE];
-    _ind2 = new char[SIZE];
+    dim_ = ff_->getDim();
+    ind1_ = new char[dim_];
+    ind2_ = new char[dim_];
   }
   virtual void TearDown() {
     //I don't need deleting ff_ since FitnessFunction already does
     ff_ = NULL;
-    delete _ind1;
-    delete _ind2;
+    delete ind1_;
+    delete ind2_;
   }
 
  protected:
   FitnessFunction* ff_;
   const char *aux;
-  char *_ind1;
-  char *_ind2;
+  char *ind1_;
+  char *ind2_;
+  int dim_;
 };
 
 TEST_P(FitnessTest, GetDim) {
@@ -92,49 +94,68 @@ TEST_P(FitnessTest, FunctionNumber){
 TEST_P(FitnessTest, Inversegray){
   /* Test values can be obtained from online gray/binary converter at:
      http://www.strw.leidenuniv.nl/~mathar/progs/gray.html */
-  char *binary = new char[SIZE];
+  char *binary = new char[dim_];
   for(int j = 0; j < 3; j++){
-    for(int i = 0; i < SIZE; i++ ){
+    for(int i = 0; i < dim_; i++ ){
       switch(j){
         case 0:
-          _ind1[i] = 1;             // Gray   111111111111111111111111111111 
-          _ind2[i] = 1 - (i % 2);   // Binary 101010101010101010101010101010
+          ind1_[i] = 1;             // Gray   111111111111111111111111111111 
+          ind2_[i] = 1 - (i % 2);   // Binary 101010101010101010101010101010
           break;
         case 1:
-          _ind1[i] = 0;   // Gray   000000000000000000000000000000
-          _ind2[i] = 0;   // Binary 000000000000000000000000000000
+          ind1_[i] = 0;   // Gray   000000000000000000000000000000
+          ind2_[i] = 0;   // Binary 000000000000000000000000000000
           break;
         case 2:
-          _ind1[i] = 1;             // Gray   110111101111111101110111100011 
-          _ind2[i] = 0;             // Binary 100101001010101001011010111101
+          ind1_[i] = 1;             // Gray   110111101111111101110111100011 
+          ind2_[i] = 0;             // Binary 100101001010101001011010111101
           break;
       }
     }
     if(j == 2){
-      _ind1[2] = _ind1[7] = _ind1[16] = _ind1[20] = _ind1[25] = _ind1[26] = \
-        _ind1[27] = 0; 
-      _ind2[0] = _ind2[3] = _ind2[5] = _ind2[8] = _ind2[10] = _ind2[12] =\
-        _ind2[14] = _ind2[17] = _ind2[19] = _ind2[20] = _ind2[22] = _ind2[24] =\
-        _ind2[25] = _ind2[26] = _ind2[27] = _ind2[29] = 1;
+      ind1_[2] = ind1_[7] = ind1_[16] = ind1_[20] = ind1_[25] = ind1_[26] = \
+        ind1_[27] = 0; 
+      ind2_[0] = ind2_[3] = ind2_[5] = ind2_[8] = ind2_[10] = ind2_[12] =\
+        ind2_[14] = ind2_[17] = ind2_[19] = ind2_[20] = ind2_[22] = ind2_[24] =\
+        ind2_[25] = ind2_[26] = ind2_[27] = ind2_[29] = 1;
+      
+      if(ff_->getFunctionNumber() == 2){
+        int var_dim = dim_ / ff_->getNvariables();
+        for(int i = 1; i < (var_dim / ff_->getNvariables())- 1; i++ ){
+          for(int k = i * var_dim; k < (i+1) * var_dim; k++ ){
+            if( i < ceil(ff_->getNvariables() / 2)){
+              ind2_[k] = 0;
+              ind1_[k] = 0;
+            } else {
+              ind1_[k] = 1;
+              ind2_[k] = 1 - (k % 2);
+            }
+          }
+        }
+      }
     }
-
+    
     if(ff_->getFunctionNumber()!=2){
-      ff_->inverseGray(_ind1, binary); // 
-      for(int i = 0; i < SIZE; i++ )
-        ASSERT_EQ(int(binary[0]), int(_ind2[0]));
-    } // TODO: test inverseGrayVector from Hump function   
+      ff_->inverseGray(ind1_, binary);
+      for(int i = 0; i < dim_; i++ )
+        ASSERT_EQ(int(binary[i]), int(ind2_[i]));
+    } else {
+      ff_->inverseGrayVector(ind1_, binary);
+      for(int i = 0; i < dim_; i++ )
+        ASSERT_EQ(int(binary[i]), int(ind2_[i]));
+    }
   }
   delete binary;
 }
 
 /*TEST_P(FitnessTest, Distance) {
-  ASSERT_EQ(ff_->distance(ff_->inverseGray(_ind1),
-    ff_->inverseGray(_ind2)), );
-  ASSERT_FALSE(ff_->distance(_ind1,_ind1));
-  ASSERT_FALSE(ff_->distance(_ind2,_ind2));
+  ASSERT_EQ(ff_->distance(ff_->inverseGray(ind1_),
+    ff_->inverseGray(ind2_)), );
+  ASSERT_FALSE(ff_->distance(ind1_,ind1_));
+  ASSERT_FALSE(ff_->distance(ind2_,ind2_));
   for(int i = 0; i < SIZE/2; i++)
-    _ind1[i] = 1;
-  ASSERT_NEAR(ff_->distance(_ind1, _ind2), 0.5, 1 / pow(2,SIZE-1));
+    ind1_[i] = 1;
+  ASSERT_NEAR(ff_->distance(ind1_, ind2_), 0.5, 1 / pow(2,SIZE-1));
 }*/
 
 // factory functions:
