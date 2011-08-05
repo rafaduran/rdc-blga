@@ -16,7 +16,7 @@ class Random {
     
     const static long MASK = 2147483647;
     const static long PRIME = 65539;
-    const static double SCALE;
+    const static double SCALE = 0.4656612875e-9;
     long Seed;
     
     public:
