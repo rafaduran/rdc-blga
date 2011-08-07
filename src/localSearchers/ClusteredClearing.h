@@ -41,17 +41,24 @@ class ClusteredClearing : public Blga {
       ClusteredClearing(int nOff, int popSize, int dimension, double probMux,
          int numMates, int pamNass, int rtsNass, FitnessFunction* ff, Random*
          random, double clRadius);
+      
       ClusteredClearing(int nOff, int popSize, int dimension, int alfa, int
          numMates, int pamNass, int rtsNass, FitnessFunction *ff, Random
          *random, double clRadius);
+      
       virtual ~ClusteredClearing();
+      
       virtual void iterate();
+      
       virtual int improve(char* s, double& fitness, int size, int
          maxEvaluations, int iRuns, int current_nFEs, int fNumber, const
          char* name);
+      
       virtual bool hasConverged();
+      
       virtual void crossMUX(double probM, Cluster &clus, char **mates, int
          numMates, char *off, int size);
+      
    private:
       int _numEval;  // Number evaluations made in last iteration
       vector <Cluster> _cs;  // Holds clusters information
@@ -65,8 +72,11 @@ class ClusteredClearing : public Blga {
                         _cluster[i] = -2 -> centroid */
                           
       void clusteredClearingReplacement(); /* Replacement method used by CC */
+      
       int searchReplaced();   // Search indivudual to be replaced
+      
       int searchCluster(char *gen); // Return index of closer cluster to gen
+      
       int searchWorst(int cluster); /* Return index of worst individual from 
                                        specific cluster */
 };
