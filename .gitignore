@@ -11,3 +11,4 @@ rdc-blga.kdev4
 *.save
 *.o
 *.a
+*.out
