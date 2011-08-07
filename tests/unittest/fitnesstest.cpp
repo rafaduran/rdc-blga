@@ -1,6 +1,6 @@
 /*
-    <one line to give the program's name and a brief idea of what it does.>
-    Copyright (C) 2011  <copyright holder> <email>
+    FitnessFunction classes tests
+    Copyright (C) 2011  Rafael Durán Castañeda <rafadurancastaneda@gmail.com>
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,16 +19,16 @@
 
 #include <gtest/gtest.h>
 
-#include "FitnessFunction.h"
-#include "fitnesstest.h"
+// Fitness includes
 #include "Random.h"
+#include "FitnessFunction.h"
+
 
 using ::testing::TestWithParam;
 using ::testing::Values;
 
 
 typedef FitnessFunction* CreateFitnessFunc();
-
 
 template <int functionNumber>
 FitnessFunction* CreateFitness() {
@@ -44,6 +44,7 @@ class FitnessTest : public TestWithParam<CreateFitnessFunc*> {
     dim_ = ff_->getDim();
     ind1_ = new char[dim_];
     ind2_ = new char[dim_];
+    error_ = 1 / pow(2, (dim_ / ff_->getNvariables()) -1);
   }
   virtual void TearDown() {
     //I don't need deleting ff_ since FitnessFunction already does
@@ -58,7 +59,9 @@ class FitnessTest : public TestWithParam<CreateFitnessFunc*> {
   char *ind1_;
   char *ind2_;
   int dim_;
+  double error_;
 };
+
 
 TEST_P(FitnessTest, GetDim) {
   
@@ -90,6 +93,7 @@ TEST_P(FitnessTest, FunctionNumber){
       break;
   }
 }
+
 
 TEST_P(FitnessTest, Inversegray){
   /* Test values can be obtained from online gray/binary converter at:
@@ -148,9 +152,9 @@ TEST_P(FitnessTest, Inversegray){
   delete binary;
 }
 
+
 TEST_P(FitnessTest, BinaryToDouble){
-  //Random *random = new Random();
-  
+  //TODO: refactoring must be done here after issue #14 is done
   for(int i = 0; i < 3; i++ ){
     for(int j = 0; j < dim_; j++){
       switch(i){
@@ -212,15 +216,24 @@ TEST_P(FitnessTest, BinaryToDouble){
     }
   }
 }
-/*TEST_P(FitnessTest, Distance) {
-  ASSERT_EQ(ff_->distance(ff_->inverseGray(ind1_),
-    ff_->inverseGray(ind2_)), );
-  ASSERT_FALSE(ff_->distance(ind1_,ind1_));
-  ASSERT_FALSE(ff_->distance(ind2_,ind2_));
-  for(int i = 0; i < SIZE/2; i++)
-    ind1_[i] = 1;
-  ASSERT_NEAR(ff_->distance(ind1_, ind2_), 0.5, 1 / pow(2,SIZE-1));
-}*/
+
+
+TEST_P(FitnessTest, Distance) {
+  for(int i = 0; i < dim_; i++){
+    ind1_[i] = 0;
+    ind2_[i] = 0;
+  }
+  
+  ASSERT_EQ(ff_->distance(ind1_, ind2_), 0);
+  Random *rdom = new Random();
+  rdom->cambiaSemilla(987654321);
+  for(int i = 0; i < dim_ / 2; i++)
+    ind1_[rdom->Randint(0, dim_)] = 1;
+  ASSERT_GT(ff_->distance(ind1_, ind2_), 0); 
+  
+}
+
+
 
 // factory functions:
 INSTANTIATE_TEST_CASE_P(

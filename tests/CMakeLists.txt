@@ -33,8 +33,8 @@ SET(FITNESS ../src/carlosFitnessFunctions/PeriodicEqual.cpp
             ../src/carlosFitnessFunctions/PeriodicUnequal.cpp
    )
 
-ADD_EXECUTABLE(blga-tests ${FITNESS} ./unittest/fitnesstest.cpp)
+SET(TESTS       ./unittest/fitnesstest.cpp)
 
-target_link_libraries(blga-tests gtest_main gtest)
+ADD_EXECUTABLE(blga-tests.out ${FITNESS} ${TESTS})
 
-ADD_TEST(unittest blga-tests)
+target_link_libraries(blga-tests.out gtest_main gtest)
