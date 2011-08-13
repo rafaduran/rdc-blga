@@ -12,9 +12,9 @@ order to force a member of the current population to perish and to make room
 for the new oﬀspring. It is important to know that RTS favours the formation
 of niches in P (groups of chromosomes with high quality located in diﬀerent
 and scattered regions of the search space). In addition, the BLGA maintains an
-external chromosome, the leader chromosome (C\ :sub:`L`\), which is always selected as
-one of the parents for the crossover operation. The following sections indicate
-the main components of the BLGA.
+external chromosome, the leader chromosome (C\ :sub:`L`\), which is always 
+selected as one of the parents for the crossover operation. The following 
+sections indicate the main components of the BLGA.
 
 How it works?
 =============
@@ -29,7 +29,8 @@ The general BLGA's schema is represented in the next image:
 
    BLGA's schema
 
-Contents:
+Source code
+===========
 
 .. toctree::
    :maxdepth: 2

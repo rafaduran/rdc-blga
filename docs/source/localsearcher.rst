@@ -1,3 +1,5 @@
+.. _localsearcher:
+
 LocalSearcher
 =============
 :cpp:class:`LocalSearcher` is the base class interface for all local search 

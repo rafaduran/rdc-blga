@@ -1,11 +1,22 @@
 Classes
 =======
-All avaliable classes are defined here.
+Main avaliable classes are listed here.
 
-Classes:
+Local searcher classes:
+-----------------------
 
 .. toctree::
-   :maxdepth: 2
+  :maxdepth: 2
 
-   localsearcher
-   blga
+  localsearcher
+  blga
+  clusteredclearing
+
+Fitness function classes
+------------------------
+
+.. toctree::
+  :maxdepth: 2
+  
+  fitnessfunction
+   

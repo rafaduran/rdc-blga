@@ -45,7 +45,7 @@ class ClusteredClearing : public Blga {
       ClusteredClearing(int nOff, int popSize, int dimension, int alfa, int
          numMates, int pamNass, int rtsNass, FitnessFunction *ff, Random
          *random, double clRadius);
-      
+         
       virtual ~ClusteredClearing();
       
       virtual void iterate();
@@ -53,27 +53,27 @@ class ClusteredClearing : public Blga {
       virtual int improve(char* s, double& fitness, int size, int
          maxEvaluations, int iRuns, int current_nFEs, int fNumber, const
          char* name);
-      
+  
+  protected: 
       virtual bool hasConverged();
-      
-      virtual void crossMUX(double probM, Cluster &clus, char **mates, int
+            virtual void crossMUX(double probM, Cluster &clus, char **mates, int
          numMates, char *off, int size);
       
    private:
       int _numEval;  // Number evaluations made in last iteration
       vector <Cluster> _cs;  // Holds clusters information
-      vector <Off> _offsprings; // Holds offsprings information
+      vector <Off> _offsprings; // Holds offspring information
       double _clRadius;   // Clearing radius
-      void clearing(); // Clearing method
       int *_cluster;   /* Cluster index:
                         _cluster[i] = n -> 0 <= n <= number of clusters
                                            i belongs to cluster n 
                         _cluster[i] = -1 -> not assigned
                         _cluster[i] = -2 -> centroid */
-                          
+      void clearing(); // Clearing method
+      
       void clusteredClearingReplacement(); /* Replacement method used by CC */
       
-      int searchReplaced();   // Search indivudual to be replaced
+      int searchReplaced();   // Search individual to be replaced
       
       int searchCluster(char *gen); // Return index of closer cluster to gen
       
