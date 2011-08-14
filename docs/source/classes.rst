@@ -19,4 +19,5 @@ Fitness function classes
   :maxdepth: 2
   
   fitnessfunction
+  periodicequal
    
