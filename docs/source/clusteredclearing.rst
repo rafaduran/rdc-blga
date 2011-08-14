@@ -1,5 +1,5 @@
-ClusteredClearing
-=================
+:cpp:class:`ClusteredClearing`
+==============================
 :cpp:class:`ClusteredClearing` inherits from :ref:`Blga` and reimplemnts 
 some of its methods. This subclass is an attempt to fix all problems of
 :ref:`Blga`.

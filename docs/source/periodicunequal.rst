@@ -1,5 +1,5 @@
-Periodic unequal
-================
+:cpp:class:`PeriodicUnequal`
+============================
 :cpp:class:`PeriodicUnequal` inherits from :ref:`FitnessFunction` implementing
 next function:
 

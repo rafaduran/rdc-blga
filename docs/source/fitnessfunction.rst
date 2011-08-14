@@ -1,7 +1,7 @@
 .. _fitnessfunction:
 
-Fitness function
-================
+:cpp:class:`FitnessFunction`
+============================
 :cpp:class:`FitnessFunction` is the base class for all fitness functions.
 
 Macros

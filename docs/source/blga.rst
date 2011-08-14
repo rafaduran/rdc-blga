@@ -1,7 +1,7 @@
 .. _blga:
 
-Blga
-====
+:cpp:class:`Blga`
+=================
 :cpp:class:`Blga` is the base class for all Binary-coded Local Genetitc 
 algorithms. It implements :ref:`LocalSearcher` base class and it also defines
 interface for all Blga subclasses.
