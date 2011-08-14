@@ -20,4 +20,5 @@ Fitness function classes
   
   fitnessfunction
   periodicequal
+  periodicunequal
    
