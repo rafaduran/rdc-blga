@@ -33,28 +33,28 @@ add_custom_target(uninstall
 
 find_package(FLEX)
 
-include_directories (./src/carlosFitnessFunctions) 
-include_directories(./src/localSearchers)
+include_directories (./blga/carlosFitnessFunctions) 
+include_directories(./blga/localSearchers)
 include_directories(${FLEX_DIR})
 
-set(SEARCHER ./src/localSearchers/Blga.cpp
-             ./src/localSearchers/BlgaClearing.cpp
-             ./src/localSearchers/BlgaClustering.cpp
-             ./src/localSearchers/BlgaSharing.cpp
-             ./src/localSearchers/ClusteredClearing.cpp
-             ./src/localSearchers/LocalSearcher.cpp
+set(SEARCHER ./blga/localSearchers/Blga.cpp
+             ./blga/localSearchers/BlgaClearing.cpp
+             ./blga/localSearchers/BlgaClustering.cpp
+             ./blga/localSearchers/BlgaSharing.cpp
+             ./blga/localSearchers/ClusteredClearing.cpp
+             ./blga/localSearchers/LocalSearcher.cpp
   )
 
 
-set(FITNESS ./src/carlosFitnessFunctions/FitnessFunction.cpp
-            ./src/carlosFitnessFunctions/FitnessStopC.cpp
-            ./src/carlosFitnessFunctions/HumpFunction.cpp
-            ./src/carlosFitnessFunctions/NFEsStopC.cpp
-            ./src/carlosFitnessFunctions/NRestartsSC.cpp
-            ./src/carlosFitnessFunctions/PeriodicEqual.cpp
-            ./src/carlosFitnessFunctions/PeriodicUnequal.cpp
-            ./src/carlosFitnessFunctions/Random.cpp
-            ./src/carlosFitnessFunctions/StopCondition.cpp         
+set(FITNESS ./blga/carlosFitnessFunctions/FitnessFunction.cpp
+            ./blga/carlosFitnessFunctions/FitnessStopC.cpp
+            ./blga/carlosFitnessFunctions/HumpFunction.cpp
+            ./blga/carlosFitnessFunctions/NFEsStopC.cpp
+            ./blga/carlosFitnessFunctions/NRestartsSC.cpp
+            ./blga/carlosFitnessFunctions/PeriodicEqual.cpp
+            ./blga/carlosFitnessFunctions/PeriodicUnequal.cpp
+            #./blga/carlosFitnessFunctions/Random.cpp
+            ./blga/carlosFitnessFunctions/StopCondition.cpp         
   )
 
 SET(FLEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flex)
@@ -65,9 +65,9 @@ SET(POP_DIS_DIR ${FLEX_DIR}/popDistribution)
 
 SET(PRO_RES_DIR ${FLEX_DIR}/processResultFiles)
 
-SET(FLEX_TARGETS PeakCounter PopDistribution ProcessToWxMaxima)
+SET(FLEX_TARGETS PeakCounter.out PopDistribution.out ProcessToWxMaxima.out)
   
-set(RANDOM ./src/carlosFitnessFunctions/Random.cpp)
+set(RANDOM ./blga/carlosFitnessFunctions/Random.cpp)
 
 FLEX_TARGET(PeakCounterScan ${PEAK_NUMBER_DIR}/PeakCounter.flex
                             ${FLEX_DIR}/PeakCounter.cpp)
@@ -84,24 +84,24 @@ FLEX_TARGET(ProHumpResScan ${PRO_RES_DIR}/ProcessHumpResults.flex
 FLEX_TARGET(ProToMaximaScan ${PRO_RES_DIR}/ProcessToWxMaxima.flex
                             ${FLEX_DIR}/ProcessToWxMaxima.cpp)
 
-ADD_EXECUTABLE(PeakCounter ${FLEX_PeakCounterScan_OUTPUTS})
+ADD_EXECUTABLE(PeakCounter.out ${FLEX_PeakCounterScan_OUTPUTS})
 
-ADD_EXECUTABLE(PopDistribution ${FLEX_PopDisScan_OUTPUTS})
+ADD_EXECUTABLE(PopDistribution.out ${FLEX_PopDisScan_OUTPUTS})
 
-ADD_EXECUTABLE(ProcessP1P2Results ${FLEX_ProP1P2ResScan_OUTPUTS})
+ADD_EXECUTABLE(ProcessP1P2Results.out ${FLEX_ProP1P2ResScan_OUTPUTS})
 
-ADD_EXECUTABLE(ProcessHumpResults ${FLEX_ProHumpResScan_OUTPUTS})
+ADD_EXECUTABLE(ProcessHumpResults.out ${FLEX_ProHumpResScan_OUTPUTS})
 
-ADD_EXECUTABLE(ProcessToWxMaxima ${FLEX_ProToMaximaScan_OUTPUTS})
+ADD_EXECUTABLE(ProcessToWxMaxima.out ${FLEX_ProToMaximaScan_OUTPUTS})
 
-ADD_EXECUTABLE(blga ${FITNESS} ${SEARCHER} blgaMain.cpp)
+ADD_EXECUTABLE(blga.out ${FITNESS} ${SEARCHER} blgaMain.cpp)
 
-ADD_EXECUTABLE(peakGen ${RANDOM} 
-   ./src/carlosFitnessFunctions/peakGen/peakGenMain.cpp)
+ADD_EXECUTABLE(peakGen.out 
+   ./blga/carlosFitnessFunctions/peakGen/peakGenMain.cpp)
 
-INSTALL(TARGETS blga DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables)
+INSTALL(TARGETS blga.out DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables)
 
-INSTALL(TARGETS peakGen DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables)
+INSTALL(TARGETS peakGen.out DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables)
 
 INSTALL(TARGETS ${FLEX_TARGETS}
    DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables/flex)

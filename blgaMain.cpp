@@ -28,10 +28,10 @@
 #include <fstream>
 #include <cstdlib>
 #include <ctime>
-#include "./src/carlosFitnessFunctions/StopCondition.h"
-#include "./src/carlosFitnessFunctions/FitnessFunction.h"
-#include "./src/carlosFitnessFunctions/Random.h"
-#include "./src/localSearchers/LocalSearcher.h"
+#include "StopCondition.h"
+#include "FitnessFunction.h"
+#include "Random.h"
+#include "LocalSearcher.h"
 
 
 using namespace std;

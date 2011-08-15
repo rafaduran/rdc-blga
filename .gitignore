@@ -12,3 +12,4 @@ rdc-blga.kdev4
 *.o
 *.a
 *.out
+/flex/*.cpp
