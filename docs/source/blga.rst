@@ -40,7 +40,7 @@ Protected members
 
 .. cpp:member:: Random* random
 
-  This :cpp:class:`Random` object is used when randoms numbers, permutations,... are needed.
+  This :ref:`Random` object is used when randoms numbers, permutations,... are needed.
 
 .. cpp:member:: int dimension
   
