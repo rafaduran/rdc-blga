@@ -4,7 +4,14 @@
 =================
 :cpp:class:`Blga` is the base class for all Binary-coded Local Genetitc 
 algorithms. It implements :ref:`LocalSearcher` base class and it also defines
-interface for all Blga subclasses.
+interface for all Blga subclasses. Next image represents how :cpp:class:`Blga`
+works:
+
+.. figure:: ../images/blga.jpg
+  :align: center
+  :alt: Blga's schema
+
+  Blga's schemas
 
 Protected members
 -----------------

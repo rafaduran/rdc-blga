@@ -2,7 +2,24 @@
 ==============================
 :cpp:class:`ClusteredClearing` inherits from :ref:`Blga` and reimplemnts 
 some of its methods. This subclass is an attempt to fix all problems of
-:ref:`Blga`.
+:ref:`Blga`. Next schema represents how it works
+
+.. figure:: ../images/clustered_clearing.jpg
+  :align: center
+  :alt: Clustered clearing's schema
+
+  Clustered clearing's schema
+
+Schema can be a little bit confusing so further information is needed:
+
+* Initially clustered clearing is done. This is like normal clearing, but keeping
+  information about niches, such as clustering does.
+* Then we apply PAM and crossMUX as Blga does, but using clusters information,
+  so the idea is generating offspring for all niches
+* Once offspring is generated, we apply clusteredClearingReplacement. This
+  replacement technique is special designed for this algorithm. Replaces
+  chromosomes based on number of individual on a niche and fitness of the best
+  chromosome on that niche.
 
 Macros
 ------
