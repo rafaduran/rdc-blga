@@ -1,7 +1,7 @@
 .kdev4/
 CMakeCache.txt
 CMakeFiles/
-./Makefile
+Makefile
 build/
 cmake_install.cmake
 cmake_uninstall.cmake
