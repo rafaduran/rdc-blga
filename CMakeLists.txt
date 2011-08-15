@@ -33,28 +33,28 @@ add_custom_target(uninstall
 
 find_package(FLEX)
 
-include_directories (./src/carlosFitnessFunctions) 
-include_directories(./src/localSearchers)
+include_directories (./blga/carlosFitnessFunctions) 
+include_directories(./blga/localSearchers)
 include_directories(${FLEX_DIR})
 
-set(SEARCHER ./src/localSearchers/Blga.cpp
-             ./src/localSearchers/BlgaClearing.cpp
-             ./src/localSearchers/BlgaClustering.cpp
-             ./src/localSearchers/BlgaSharing.cpp
-             ./src/localSearchers/ClusteredClearing.cpp
-             ./src/localSearchers/LocalSearcher.cpp
+set(SEARCHER ./blga/localSearchers/Blga.cpp
+             ./blga/localSearchers/BlgaClearing.cpp
+             ./blga/localSearchers/BlgaClustering.cpp
+             ./blga/localSearchers/BlgaSharing.cpp
+             ./blga/localSearchers/ClusteredClearing.cpp
+             ./blga/localSearchers/LocalSearcher.cpp
   )
 
 
-set(FITNESS ./src/carlosFitnessFunctions/FitnessFunction.cpp
-            ./src/carlosFitnessFunctions/FitnessStopC.cpp
-            ./src/carlosFitnessFunctions/HumpFunction.cpp
-            ./src/carlosFitnessFunctions/NFEsStopC.cpp
-            ./src/carlosFitnessFunctions/NRestartsSC.cpp
-            ./src/carlosFitnessFunctions/PeriodicEqual.cpp
-            ./src/carlosFitnessFunctions/PeriodicUnequal.cpp
-            ./src/carlosFitnessFunctions/Random.cpp
-            ./src/carlosFitnessFunctions/StopCondition.cpp         
+set(FITNESS ./blga/carlosFitnessFunctions/FitnessFunction.cpp
+            ./blga/carlosFitnessFunctions/FitnessStopC.cpp
+            ./blga/carlosFitnessFunctions/HumpFunction.cpp
+            ./blga/carlosFitnessFunctions/NFEsStopC.cpp
+            ./blga/carlosFitnessFunctions/NRestartsSC.cpp
+            ./blga/carlosFitnessFunctions/PeriodicEqual.cpp
+            ./blga/carlosFitnessFunctions/PeriodicUnequal.cpp
+            ./blga/carlosFitnessFunctions/Random.cpp
+            ./blga/carlosFitnessFunctions/StopCondition.cpp         
   )
 
 SET(FLEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flex)
@@ -67,7 +67,7 @@ SET(PRO_RES_DIR ${FLEX_DIR}/processResultFiles)
 
 SET(FLEX_TARGETS PeakCounter PopDistribution ProcessToWxMaxima)
   
-set(RANDOM ./src/carlosFitnessFunctions/Random.cpp)
+set(RANDOM ./blga/carlosFitnessFunctions/Random.cpp)
 
 FLEX_TARGET(PeakCounterScan ${PEAK_NUMBER_DIR}/PeakCounter.flex
                             ${FLEX_DIR}/PeakCounter.cpp)
@@ -97,7 +97,7 @@ ADD_EXECUTABLE(ProcessToWxMaxima ${FLEX_ProToMaximaScan_OUTPUTS})
 ADD_EXECUTABLE(blga ${FITNESS} ${SEARCHER} blgaMain.cpp)
 
 ADD_EXECUTABLE(peakGen ${RANDOM} 
-   ./src/carlosFitnessFunctions/peakGen/peakGenMain.cpp)
+   ./blga/carlosFitnessFunctions/peakGen/peakGenMain.cpp)
 
 INSTALL(TARGETS blga DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/executables)
 
