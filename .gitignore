@@ -13,3 +13,5 @@ rdc-blga.kdev4
 *.a
 *.out
 /flex/*.cpp
+*swp
+*json
