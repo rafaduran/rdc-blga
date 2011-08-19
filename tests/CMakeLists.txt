@@ -21,20 +21,32 @@ cmake_minimum_required(VERSION 2.8.0)
 
 PROJECT(blga-tests)
 
-include_directories (./gtest-1.6.0/include
-                     ./unittest
-                     ../src/carlosFitnessFunctions)
+include_directories(./gtest-1.6.0/include
+                    ./unittest
+                    ../blga/carlosFitnessFunctions
+                    ../blga/resultWriter
+    )
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/gtest-1.6.0)
 
-SET(FITNESS ../src/carlosFitnessFunctions/PeriodicEqual.cpp
-            ../src/carlosFitnessFunctions/FitnessFunction.cpp
-            ../src/carlosFitnessFunctions/HumpFunction.cpp
-            ../src/carlosFitnessFunctions/PeriodicUnequal.cpp
+SET(FITNESS ../blga/carlosFitnessFunctions/PeriodicEqual.cpp
+            ../blga/carlosFitnessFunctions/FitnessFunction.cpp
+            ../blga/carlosFitnessFunctions/HumpFunction.cpp
+            ../blga/carlosFitnessFunctions/PeriodicUnequal.cpp
    )
 
-SET(TESTS       ./unittest/fitnesstest.cpp)
+SET(WRITERS ../blga/resultWriter/resultwriter.cpp
+            ../blga/resultWriter/blgajsonrw.cpp
+    )
 
-ADD_EXECUTABLE(blga-tests.out ${FITNESS} ${TESTS})
+SET(FITNESS_TESTS       ./unittest/fitnesstest.cpp)
+SET(RW_TESTS            ./unittest/resultwritertest.cpp)
 
-target_link_libraries(blga-tests.out gtest_main gtest)
+
+ADD_EXECUTABLE(fitness-tests.out ${FITNESS} ${FITNESS_TESTS})
+
+ADD_EXECUTABLE(rw-tests.out ${WRITERS} ${RW_TESTS})
+
+target_link_libraries(fitness-tests.out gtest_main gtest)
+target_link_libraries(rw-tests.out gtest_main gtest)
+
