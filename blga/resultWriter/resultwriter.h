@@ -15,30 +15,34 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
+#include <iostream>
+#include <fstream>
+#include "blgajsonrw.h"
 
 #ifndef RESULTWRITER_H
 #define RESULTWRITER_H
 
-template <class T>
 class ResultWriter
 {
 
 public:
-    virtual ResultWriter(bool tofile, const char* filename);
-    ~ResultWriter();
-    virtual write(T population,double *fValues);
+    ResultWriter(){return;};
+    virtual ~ResultWriter();
+    virtual void start(){return;};
+    virtual void write(double* variables,double fitness, bool is_last){return;};
+    virtual void end(){return;};
     void setNVariables(int nVar);
     int getNVariables();
     void setFilename(const char *filename);
     const char* getFilename();
-    static ResultWriter<T>* getResultWriter(int rwNumber);
+    static ResultWriter* getResultWriter(int rwNumber, bool tofile, 
+                                 const char* filename);
 protected:
-    const char *_filename;
-    int _nVariables;
+    const char *filename_;
+    int nVariables_;
     void redirect();
 private:
-    static ResultWriter* rw;
+    static ResultWriter* _rw;
 };
 
 #endif // RESULTWRITER_H

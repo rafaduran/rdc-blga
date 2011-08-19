@@ -17,6 +17,11 @@
 */
 
 #include "resultwriter.h"
+#include <cstdio>
+
+using namespace std;
+
+ResultWriter* ResultWriter::_rw = NULL;
 
 ResultWriter::~ResultWriter()
 {
@@ -25,42 +30,43 @@ ResultWriter::~ResultWriter()
 
 const char* ResultWriter::getFilename()
 {
-    return this->_filename;
+    return this->filename_;
 }
 
 void ResultWriter::setFilename(const char* filename)
 {
-    this->_filename = filename;
+    this->filename_ = filename;
 }
 
 void ResultWriter::setNVariables(int nVar)
 {
-    this->_nVariables = nVar;
+    this->nVariables_ = nVar;
 }
 
 int ResultWriter::getNVariables()
 {
-    return this->_nVariables;
+    return this->nVariables_;;
 }
 
-ResulWriter<T>* ResultWriter::getResultWriter(int rwNumber)
+ResultWriter* ResultWriter::getResultWriter(int rwNumber, bool tofile,
+    const char* filename)
 {
-    if(rw != NULL)
-        delete rw;
+    if(_rw != NULL)
+        delete _rw;
     
     switch(rwNumber){
     
         case 0:
-            // Creating a ResultWriter
-            rw = new ResultWriter<char**>(true, "test.txt");
+            // Creating a BlgaJsonRW
+            _rw = new BlgaJsonRW(tofile, filename);
             break;
     }
-    return rw;
+    return _rw;
 }
 
 void ResultWriter::redirect()
 {
-    freopen (this->_filename,"w",stdout);
+    freopen (this->filename_,"w",stdout);
 }
 
 
