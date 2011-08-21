@@ -27,7 +27,7 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
 {
     this->nVariables_ = nVariables;
     this->filename_ = filename;
-    this->out_.open(filename, std::ios::app);
+    this->out_.open(filename, std::ios::out);
 }
 template BlgaJsonRW<std::ofstream>::BlgaJsonRW(const char* filename, 
                                                int nVariables);
