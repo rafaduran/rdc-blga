@@ -26,36 +26,60 @@ using ::testing::TestWithParam;
 using ::testing::Values;
 
 
-typedef ResultWriter* CreateRWFunc();
+typedef ResultWriter<std::ofstream>* CreateRWFunc();
 
-template <int rwNumber, bool tofile>
-ResultWriter* CreateRW() {
-  return  ResultWriter::getResultWriter(rwNumber, tofile, "test.json");
+template <int rwNumber, int nVariables, class T>
+ResultWriter<T>* CreateRW() {
+    switch(nVariables){
+        case 1:
+            return  ResultWriter<T>::getResultWriter(rwNumber, 
+                        "prueba_1.json", nVariables);
+            break;
+        case 5:
+            return  ResultWriter<T>::getResultWriter(rwNumber, 
+                        "prueba_5.json", nVariables);
+            break;
+    }
+        
 }
 
 
 class RWTest : public TestWithParam<CreateRWFunc*> {
  public:
-  virtual ~RWTest() { delete rw_; }
+  virtual ~RWTest() { delete this->rw_; }
   virtual void SetUp() { 
-    rw_ = (*GetParam())();
+    this->rw_ = (*GetParam())();
   }
   virtual void TearDown() {
     //I don't need deleting ff_ since ResultWriter already does
-    rw_ = NULL;
+    this->rw_ = NULL;
   }
 
  protected:
-  ResultWriter* rw_;
+  ResultWriter<std::ofstream>* rw_;
 };
 
 
-TEST_P(RWTest, Prueba) {
-    EXPECT_EQ(0, 1);
+TEST_P(RWTest, GET_SET_Variables) {
+    switch(rw_->getNVariables()){
+        case 1:
+        case 5:
+            SUCCEED();
+            break;
+        default:
+            FAIL();
+    }
+    rw_->setNVariables(3);
+    ASSERT_EQ(3, rw_->getNVariables());
 }
 
 // factory functions:
 INSTANTIATE_TEST_CASE_P(
-    BlgaJRW,
+    BlgaJRW_1,
     RWTest,
-    Values(&CreateRW<0, true>));
+    Values(&CreateRW<0, 1, std::ofstream>));
+
+INSTANTIATE_TEST_CASE_P(
+    BlgaJRW_5,
+    RWTest,
+    Values(&CreateRW<0, 5, std::ofstream>));
