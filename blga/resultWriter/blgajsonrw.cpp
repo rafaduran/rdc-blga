@@ -22,41 +22,46 @@ using namespace std;
 
 #include "blgajsonrw.h"
 
-BlgaJsonRW::BlgaJsonRW(bool tofile, const char* filename)
+template <class T>
+BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
 {
+    this->nVariables_ = nVariables;
     this->filename_ = filename;
-    if(tofile)
-        this->redirect();
+    this->out_.open(filename, std::ios::app);
 }
+template BlgaJsonRW<std::ofstream>::BlgaJsonRW(const char* filename, 
+                                               int nVariables);
 
-void BlgaJsonRW::start()
+template <class T>
+void BlgaJsonRW<T>::start()
 {
-    cout << "[" << endl;
+    this->out_ << "[" << endl;
 }
 
 
-void BlgaJsonRW::write(double* variables, double fitness, bool is_last)
+template <class T>
+void BlgaJsonRW<T>::write(double* variables, double fitness, bool is_last)
 {        
-    cout << "\t{\"fitness\": " << fitness << ", "; // Start 
-    cout << "\"variable\": [";
+    this->out_ << "\t{\"fitness\": " << fitness << ", "; // Start 
+    this->out_ << "\"variable\": [";
     for(int j = 0; j < this->nVariables_; j++){
         
-        cout << " {\"" << j << "\": " << variables[j] << "}";
+        this->out_ << " {\"" << j << "\": " << variables[j] << "}";
         if( j != (this->nVariables_ - 1)){
-            cout << "," ;
+            this->out_ << "," ;
         }
     }
-    cout << "]";
+    this->out_ << "]";
     // End
-    if (is_last){
-        cout << "}," << endl;
+    if (!is_last){
+        this->out_ << "}," << endl;
     } else {
-        cout << "}" << endl;
+        this->out_ << "}" << endl;
     }
 }
 
-void BlgaJsonRW::end()
+template <class T>
+void BlgaJsonRW<T>::end()
 {
-    cout << "]";
+    this->out_ << "]" << endl;
 }
-

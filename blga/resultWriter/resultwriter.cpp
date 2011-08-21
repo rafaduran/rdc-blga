@@ -17,39 +17,40 @@
 */
 
 #include "resultwriter.h"
-#include <cstdio>
 
-using namespace std;
+template <class T>
+ResultWriter<T>* ResultWriter<T>::_rw = NULL;
 
-ResultWriter* ResultWriter::_rw = NULL;
-
-ResultWriter::~ResultWriter()
-{
-    fclose(stdout);
-}
-
-const char* ResultWriter::getFilename()
+template <class T>
+const char* ResultWriter<T>::getFilename()
 {
     return this->filename_;
 }
 
-void ResultWriter::setFilename(const char* filename)
+template <class T>
+void ResultWriter<T>::setFilename(const char* filename)
 {
     this->filename_ = filename;
+    this->out_.open(filename, std::ios::app);
 }
 
-void ResultWriter::setNVariables(int nVar)
+template <class T>
+void ResultWriter<T>::setNVariables(int nVar)
 {
     this->nVariables_ = nVar;
 }
+template void ResultWriter<std::ofstream>::setNVariables(int nVar);
 
-int ResultWriter::getNVariables()
+template <class T>
+int ResultWriter<T>::getNVariables()
 {
     return this->nVariables_;;
 }
+template int ResultWriter<std::ofstream>::getNVariables();
 
-ResultWriter* ResultWriter::getResultWriter(int rwNumber, bool tofile,
-    const char* filename)
+template <class T>
+ResultWriter<T>* ResultWriter<T>::getResultWriter(int rwNumber, 
+    const char* filename, int nVariables)
 {
     if(_rw != NULL)
         delete _rw;
@@ -58,19 +59,11 @@ ResultWriter* ResultWriter::getResultWriter(int rwNumber, bool tofile,
     
         case 0:
             // Creating a BlgaJsonRW
-            _rw = new BlgaJsonRW(tofile, filename);
+            _rw = new BlgaJsonRW<T>(filename, nVariables);
             break;
     }
     return _rw;
 }
 
-void ResultWriter::redirect()
-{
-    freopen (this->filename_,"w",stdout);
-}
-
-
-
-
-
-
+template ResultWriter<std::ofstream>* ResultWriter<std::ofstream>::
+    getResultWriter(int rwNumber, const char* filename, int nVariables);

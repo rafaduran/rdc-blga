@@ -23,14 +23,14 @@
 
 #include "resultwriter.h"
 
-
-class BlgaJsonRW : public ResultWriter
+template <class T>
+class BlgaJsonRW : public ResultWriter<T>
 {
 
 public:
-    BlgaJsonRW(bool tofile, const char* filename);
+    BlgaJsonRW(const char* filename, int nVariables);
     void start(); 
-    void write(double* variables, double fitness, bool is_last);
+    void write(double* variables, double fitness, bool is_last=false);
     void end();
 };
 

@@ -22,27 +22,28 @@
 #ifndef RESULTWRITER_H
 #define RESULTWRITER_H
 
+template <class T>
 class ResultWriter
 {
 
 public:
     ResultWriter(){return;};
-    virtual ~ResultWriter();
+    virtual ~ResultWriter(){return;};
     virtual void start(){return;};
-    virtual void write(double* variables,double fitness, bool is_last){return;};
+    virtual void write(double* variables,double fitness, bool is_last=false){return;};
     virtual void end(){return;};
     void setNVariables(int nVar);
     int getNVariables();
     void setFilename(const char *filename);
     const char* getFilename();
-    static ResultWriter* getResultWriter(int rwNumber, bool tofile, 
-                                 const char* filename);
+    static ResultWriter<T>* getResultWriter(int rwNumber, const char* filename, 
+        int nVariables);
 protected:
     const char *filename_;
     int nVariables_;
-    void redirect();
+    T out_;
 private:
-    static ResultWriter* _rw;
+    static ResultWriter<T>* _rw;
 };
 
 #endif // RESULTWRITER_H
