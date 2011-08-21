@@ -52,7 +52,7 @@ Public members
   Resets LocalSearcher so multiples run can be achieved using same object 
   instead of creating/destructing objects each run.
 
-.. cpp:function:: void writeResults(int iRuns, int nFEs, int functionNumber, const char *filename)
+.. cpp:function:: void writeResults(int iRuns, int nFEs, int functionNumber, bool is_last_run, bool is_last_iteration)
 
-  This **virtual** method writes results into a given filename.
+  This **virtual** method writes results using an :ref:`ResultWriter` class.
 

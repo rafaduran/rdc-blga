@@ -35,6 +35,14 @@ Fitness function classes
   periodicunequal
   humpfunction
 
+Result writers classes
+----------------------
+.. toctree::
+    :maxdepth: 2
+
+    resultwriter
+    blgajsonrw
+
 Support classes
 ---------------
 There are also some support classes, doing some job needed by main classes, so
