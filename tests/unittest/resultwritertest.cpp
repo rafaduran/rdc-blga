@@ -100,11 +100,27 @@ TEST_P(RWTest, WRITE) {
     for(int i = 0; i < nVar; i++){
         variables[i] = 1.0;
     }
-    
-    rw_->start(0);
+    rw_->startRun(0);
+    rw_->startIteration(0);
     rw_->write(variables, fitness);
     rw_->write(variables, fitness, true);
-    rw_->end(true);
+    rw_->endIteration();
+    rw_->startIteration(1);
+    rw_->write(variables, fitness);
+    rw_->write(variables, fitness, true);
+    rw_->endIteration(true);
+    rw_->endRun();
+    rw_->startRun(1);
+    rw_->startIteration(0);
+    rw_->write(variables, fitness);
+    rw_->write(variables, fitness, true);
+    rw_->endIteration();
+    rw_->startIteration(1);
+    rw_->write(variables, fitness);
+    rw_->write(variables, fitness, true);
+    rw_->endIteration(true);
+    rw_->endRun(true);
+    
     SUCCEED();
 }
 
