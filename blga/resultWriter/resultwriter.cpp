@@ -26,6 +26,7 @@ const char* ResultWriter<T>::getFilename()
 {
     return this->filename_;
 }
+template const char* ResultWriter<std::ofstream>::getFilename();
 
 template <class T>
 void ResultWriter<T>::setFilename(const char* filename)
@@ -33,6 +34,7 @@ void ResultWriter<T>::setFilename(const char* filename)
     this->filename_ = filename;
     this->out_.open(filename, std::ios::app);
 }
+template void ResultWriter<std::ofstream>::setFilename(const char* filename);
 
 template <class T>
 void ResultWriter<T>::setNVariables(int nVar)
