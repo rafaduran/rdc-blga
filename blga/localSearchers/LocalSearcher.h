@@ -66,9 +66,9 @@ public:
 	   sucesivas sin tener que crear nuevos objetos */
    void reset(char *lsName);
    
-   // Función auxiliar para almacenar los resultados      
-   virtual void writeResults(int iRuns, int nFEs, int functionNumber, 
-                             const char *filename){return;};
+   // Función auxiliar para almacenar los resultados 
+   virtual void writeResults(int iRuns,int nFEs, bool is_last_run,
+                        bool is_last_iteration){};
 };
 
 #endif

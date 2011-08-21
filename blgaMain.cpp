@@ -199,10 +199,10 @@ int main(int argc, char *argv[]){
             aux.str().data() <<  " " << difftime(final,comienzo) << endl;
       tm.close();
       
-      ls->writeResults(iRuns, stopStruct.nFEs, functionNumber,
-                       aux.str().data());
-	     
-	 delete sc;
+      ls->writeResults(iRuns, stopStruct.nFEs, true, 
+                       (iRuns==(numRuns-1))?true:false);
+      
+      delete sc;
   }
   
   liberaInitSolutions(initSolutions, numSolutions, numRuns);

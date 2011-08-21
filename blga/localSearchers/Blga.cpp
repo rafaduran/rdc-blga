@@ -389,6 +389,14 @@ int Blga::improve(char * s, double & fitness, int size, int maxEvaluations,
    this->fCL = fitness;
    this->dimension = size;
    this->numProtected = 0;
+   
+   if(this->rw_ == NULL)
+      this->rw_ = ResultWriter<ofstream>::getResultWriter(0, name, 
+                                                     this->ff->getNvariables());
+   if(current_nFEs==1){
+      this->rw_->startRun(iRuns);
+   }
+   
   
    for ( int i = 0; i < size; i++ )
       this->mask[ i ] = 1;
@@ -404,9 +412,9 @@ int Blga::improve(char * s, double & fitness, int size, int maxEvaluations,
 
       numEvaluations++;
     
-      if((current_nFEs + numEvaluations) % 1000 == 0){
-         this->writeResults(iRuns, current_nFEs + numEvaluations, fNumber, name);
-      }
+      /*if((current_nFEs + numEvaluations) % 1000 == 0){
+         this->writeResults(iRuns, current_nFEs + numEvaluations, false, false);
+      }*/
    }
   
    fitness = this->fCL; // Guardamos el fitness obtenido
@@ -457,46 +465,34 @@ void Blga::setFF( FitnessFunction * ff ) {
 }
 
 // Función auxiliar para almacenar los resultados
-void Blga::writeResults(int iRuns,int nFEs, int fitnessNumber,
-                        const char *filename) {
-  ofstream out(filename, ios::app);
-  
-  out << "Run " << iRuns << ":" << nFEs;
-  out <<
-      "--------------------------------------------------------------------" <<
-      endl;
-  
-  for(int i = 0; i < popSize; i++) {
+void Blga::writeResults(int iRuns,int nFEs, bool is_last_run, 
+                        bool is_last_iteration) {
+    int fNum = this->ff->getFunctionNumber();
+    rw_->startIteration(nFEs);
+    for(int i = 0; i < popSize; i++) {
         
-    double *vector,fitness,variable;
-    char binary[dimension];
+        double *vector = new double[ff->getNvariables()];
+        double fitness;
+        char binary[dimension];
 
-    if(fitnessNumber != 2) {
-      ff->inverseGray(population[i],binary);
-      variable = ff->binaryToDouble(binary);
-      fitness = ff->fitness(population[i]);
-    } else {
-      vector = new double[ff->getNvariables()];
-      ff->inverseGrayVector(population[i],binary);
-      ff->binaryToDoubleVector(binary,vector);
-      fitness = ff->fitness(population[i]);
+        if( fNum != 2) {
+            ff->inverseGray(population[i],binary);
+            vector[0] = ff->binaryToDouble(binary);
+            fitness = ff->fitness(population[i]);
+            this->rw_->write(vector, fitness, (i==popSize-1)?true:false);
+        } else {
+            vector = new double[ff->getNvariables()];
+            ff->inverseGrayVector(population[i],binary);
+            ff->binaryToDoubleVector(binary,vector);
+            fitness = ff->fitness(population[i]);
+            this->rw_->write(vector, fitness, (i==popSize-1)?true:false);
+        }
     }
+    rw_->endIteration(is_last_iteration);
   
-    out.setf(ios::scientific,ios::floatfield);
-    out.precision(15);
-         
-    if(ff->getNvariables() == 1) {
-      out << fitness << " " << variable << endl;
-    } else {
-      out << fitness;
-      for(int j = 0; j < ff->getNvariables(); j++) {
-        out << "\t" << vector[j];
-      }
-      out << endl;
+    if(is_last_iteration){
+        rw_->endRun(is_last_run);
     }
-  }
-  out.flush();
-  out.close();
 }
 
 /* Función auxiliar usada por quickSort */

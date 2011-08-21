@@ -33,8 +33,9 @@ add_custom_target(uninstall
 
 find_package(FLEX)
 
-include_directories (./blga/carlosFitnessFunctions) 
+include_directories(./blga/carlosFitnessFunctions) 
 include_directories(./blga/localSearchers)
+include_directories(./blga/resultWriter)
 include_directories(${FLEX_DIR})
 
 set(SEARCHER ./blga/localSearchers/Blga.cpp
@@ -53,9 +54,12 @@ set(FITNESS ./blga/carlosFitnessFunctions/FitnessFunction.cpp
             ./blga/carlosFitnessFunctions/NRestartsSC.cpp
             ./blga/carlosFitnessFunctions/PeriodicEqual.cpp
             ./blga/carlosFitnessFunctions/PeriodicUnequal.cpp
-            #./blga/carlosFitnessFunctions/Random.cpp
             ./blga/carlosFitnessFunctions/StopCondition.cpp         
   )
+
+set(RW  ./blga/resultWriter/resultwriter.cpp
+        ./blga/resultWriter/blgajsonrw.cpp
+)
 
 SET(FLEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/flex)
 
@@ -94,7 +98,7 @@ ADD_EXECUTABLE(ProcessHumpResults.out ${FLEX_ProHumpResScan_OUTPUTS})
 
 ADD_EXECUTABLE(ProcessToWxMaxima.out ${FLEX_ProToMaximaScan_OUTPUTS})
 
-ADD_EXECUTABLE(blga.out ${FITNESS} ${SEARCHER} blgaMain.cpp)
+ADD_EXECUTABLE(blga.out ${FITNESS} ${SEARCHER} ${RW} blgaMain.cpp)
 
 ADD_EXECUTABLE(peakGen.out 
    ./blga/carlosFitnessFunctions/peakGen/peakGenMain.cpp)

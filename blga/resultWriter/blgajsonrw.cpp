@@ -28,7 +28,7 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
 {
     this->nVariables_ = nVariables;
     this->filename_ = filename;
-    this->out_.open(filename, std::ios::out);
+    this->out_.open(filename, std::ios::app);
     this->out_.setf(ios::scientific,ios::floatfield);
     this->out_.precision(15);
     this->out_ << "{" << endl;
@@ -68,10 +68,9 @@ void BlgaJsonRW<T>::endIteration(bool is_last=false)
 {
     this->out_ << "\t\t]";
     if(is_last){
-    
         this->out_ << "}";
     } else {
-        this->out_ << "," << endl;
+        this->out_ << "}," << endl;
     }
 }
 

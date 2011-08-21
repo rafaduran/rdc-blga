@@ -22,8 +22,9 @@
 
 #include <fstream>
 #include "LocalSearcher.h"
-#include "../carlosFitnessFunctions/FitnessFunction.h"
-#include "../carlosFitnessFunctions/Random.h"
+#include "FitnessFunction.h"
+#include "Random.h"
+#include "resultwriter.h"
 
 /**
  @author Carlos
@@ -51,6 +52,7 @@ class Blga : public LocalSearcher{
     bool repulse;    // Valor usado en el cruce
     int itC;         /* Variable que indica la frecuencia con la que se llaman
                         iterate y fastIterate */
+    ResultWriter<ofstream>* rw_;
     
     // Cruce multipadre uniforme
     virtual void crossMUX(double probM, char *cl, char **mates, int numMates, 
@@ -98,8 +100,8 @@ class Blga : public LocalSearcher{
       virtual void setFF( FitnessFunction * ff );
       
       // Función auxiliar usada para guardar los resultados en un fichero                           
-      void writeResults(int iRuns,int nFEs, int functionNumber, 
-                        const char *filename); 
+      void writeResults(int iRuns,int nFEs, bool is_last_run,
+                        bool is_last_iteration); 
       
       void swap(int *a, int *b); // Función auxiliar de quick sort
       

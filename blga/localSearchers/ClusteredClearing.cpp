@@ -46,24 +46,28 @@ ClusteredClearing::~ClusteredClearing(){
 }
 
 int ClusteredClearing::improve(char* s, double& fitness, int size, 
-   int maxEvaluations, int iRuns, int current_nFEs, int fNumber, const char* 
-   name) {
-   
-   int numEvaluations = 0;
-   this->dimension = size;
-   int cont = 0;
+    int maxEvaluations, int iRuns, int current_nFEs, int fNumber, const char* 
+    name) {
+    if(this->rw_ == NULL)
+        this->rw_ = ResultWriter<ofstream>::getResultWriter(0, name, 
+                                                     this->ff->getNvariables());
+    this->rw_->startRun(iRuns);
+    
+    int numEvaluations = 0;
+    this->dimension = size;
+    int cont = 0;
         
-   while ( numEvaluations < maxEvaluations) {
+    while ( numEvaluations < maxEvaluations) {
       
-      this->iterate();
+        this->iterate();
       
-      numEvaluations += _numEval;
-      //cout << _numEval << endl;
-      cont += _numEval;
-   }
+        numEvaluations += _numEval;
+        //cout << _numEval << endl;
+        cont += _numEval;
+    }
   
-   fitness = this->fCL; // Guardamos el fitness obtenido
-   return numEvaluations;  // Devolvemos el número de evaluaciones realizadas
+    fitness = this->fCL; // Guardamos el fitness obtenido
+    return numEvaluations;  // Devolvemos el número de evaluaciones realizadas
 }
 
 bool ClusteredClearing::hasConverged( ) {
