@@ -51,7 +51,7 @@ class RWTest : public TestWithParam<CreateRWFunc*> {
     this->rw_ = (*GetParam())();
   }
   virtual void TearDown() {
-    //I don't need deleting ff_ since ResultWriter already does
+    //I don't need deleting rw_ since ResultWriter already does
     this->rw_ = NULL;
   }
 
@@ -71,6 +71,21 @@ TEST_P(RWTest, GET_SET_Variables) {
     }
     rw_->setNVariables(3);
     ASSERT_EQ(3, rw_->getNVariables());
+}
+
+TEST_P(RWTest, GET_SET_Filename) {
+    switch(rw_->getNVariables()){
+        case 1:
+            ASSERT_STREQ("prueba_1.json", rw_->getFilename());
+            break;
+        case 5:
+            ASSERT_STREQ("prueba_5.json", rw_->getFilename());
+            break;
+        default:
+            FAIL();
+    }
+    rw_->setFilename("prueba.json");
+    ASSERT_STREQ("prueba.json", rw_->getFilename());
 }
 
 // factory functions:
