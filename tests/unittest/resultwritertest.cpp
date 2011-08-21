@@ -88,6 +88,26 @@ TEST_P(RWTest, GET_SET_Filename) {
     ASSERT_STREQ("prueba.json", rw_->getFilename());
 }
 
+TEST_P(RWTest, WRITE) {
+
+    int nVar = rw_->getNVariables();
+    double* variables = new double[nVar];
+    double fitness = 1.0;
+    char* buffer;
+    char *buffer_sample;
+    int length, length_sample;
+    
+    for(int i = 0; i < nVar; i++){
+        variables[i] = 1.0;
+    }
+    
+    rw_->start(0);
+    rw_->write(variables, fitness);
+    rw_->write(variables, fitness, true);
+    rw_->end(true);
+    SUCCEED();
+}
+
 // factory functions:
 INSTANTIATE_TEST_CASE_P(
     BlgaJRW_1,
