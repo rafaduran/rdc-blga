@@ -29,6 +29,8 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
     this->filename_ = filename;
     this->out_.open(filename, std::ios::out);
     this->out_ << "{" << endl;
+    this->out_.setf(ios::scientific,ios::floatfield);
+    this->out_.precision(15);
 }
 template BlgaJsonRW<std::ofstream>::BlgaJsonRW(const char* filename, 
                                                int nVariables);
