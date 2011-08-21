@@ -29,9 +29,10 @@ class BlgaJsonRW : public ResultWriter<T>
 
 public:
     BlgaJsonRW(const char* filename, int nVariables);
-    void start(); 
-    void write(double* variables, double fitness, bool is_last=false);
-    void end();
+    ~BlgaJsonRW();
+    void start(int iteration); 
+    void write(double* variables, double fitness, bool is_last = false);
+    void end(bool is_last);
 };
 
 #endif // BLGAJSONRW_H

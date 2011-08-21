@@ -28,14 +28,22 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
     this->nVariables_ = nVariables;
     this->filename_ = filename;
     this->out_.open(filename, std::ios::out);
+    this->out_ << "{" << endl;
 }
 template BlgaJsonRW<std::ofstream>::BlgaJsonRW(const char* filename, 
                                                int nVariables);
 
 template <class T>
-void BlgaJsonRW<T>::start()
+BlgaJsonRW<T>::~BlgaJsonRW()
 {
-    this->out_ << "[" << endl;
+    this->out_.close();
+}
+
+
+template <class T>
+void BlgaJsonRW<T>::start(int iteration)
+{
+    this->out_ << "\t\""<< iteration << "\": [" << endl;
 }
 
 
@@ -61,7 +69,11 @@ void BlgaJsonRW<T>::write(double* variables, double fitness, bool is_last)
 }
 
 template <class T>
-void BlgaJsonRW<T>::end()
+void BlgaJsonRW<T>::end(bool is_last)
 {
-    this->out_ << "]" << endl;
+    this->out_ << "\t]" << endl;
+    if(is_last){
+    
+        this->out_ << "}" << endl;
+    }
 }

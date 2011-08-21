@@ -22,6 +22,13 @@ template <class T>
 ResultWriter<T>* ResultWriter<T>::_rw = NULL;
 
 template <class T>
+ResultWriter<T>::~ResultWriter()
+{
+    
+}
+template ResultWriter<std::ofstream>::~ResultWriter();
+
+template <class T>
 const char* ResultWriter<T>::getFilename()
 {
     return this->filename_;
