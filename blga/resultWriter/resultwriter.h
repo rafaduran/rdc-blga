@@ -29,10 +29,12 @@ class ResultWriter
 public:
     ResultWriter(){return;};
     virtual ~ResultWriter();
-    virtual void start(int iteration){return;};
     virtual void write(double* variables,double fitness, bool is_last=false)
         {return;};
-    virtual void end(bool is_last){return;};
+    virtual void startIteration(int iteration){};
+    virtual void endIteration(bool is_last = false){};
+    virtual void startRun(int run){};
+    virtual void endRun(bool is_last = false){};
     void setNVariables(int nVar);
     int getNVariables();
     void setFilename(const char *filename);

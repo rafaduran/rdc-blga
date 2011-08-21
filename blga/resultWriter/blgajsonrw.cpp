@@ -28,9 +28,9 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
     this->nVariables_ = nVariables;
     this->filename_ = filename;
     this->out_.open(filename, std::ios::out);
-    this->out_ << "{" << endl;
     this->out_.setf(ios::scientific,ios::floatfield);
     this->out_.precision(15);
+    this->out_ << "{" << endl;
 }
 template BlgaJsonRW<std::ofstream>::BlgaJsonRW(const char* filename, 
                                                int nVariables);
@@ -41,13 +41,39 @@ BlgaJsonRW<T>::~BlgaJsonRW()
     this->out_.close();
 }
 
-
 template <class T>
-void BlgaJsonRW<T>::start(int iteration)
-{
-    this->out_ << "\t\""<< iteration << "\": [" << endl;
+void BlgaJsonRW<T>::startRun(int run){
+    this->out_ << "\t\""<< run << "\": {" << endl;
 }
 
+template <class T>
+void BlgaJsonRW<T>::endRun(bool is_last=false){
+    if(is_last){
+        this->out_  << endl << "}" << endl;
+    } else {
+        this->out_<< "," << endl;
+    }
+    
+}
+
+template <class T>
+void BlgaJsonRW<T>::startIteration(int iteration)
+{
+    this->out_ << "\t\t\""<< iteration << "\": [" << endl;
+}
+
+template <class T>
+void BlgaJsonRW<T>::endIteration(bool is_last=false)
+{
+    this->out_ << "\t\t]";
+    if(is_last){
+    
+        this->out_ << "}";
+    } else {
+        this->out_ << "," << endl;
+    }
+    //this->out_ << endl;
+}
 
 template <class T>
 void BlgaJsonRW<T>::write(double* variables, double fitness, bool is_last)
@@ -66,16 +92,6 @@ void BlgaJsonRW<T>::write(double* variables, double fitness, bool is_last)
     if (!is_last){
         this->out_ << "}," << endl;
     } else {
-        this->out_ << "}" << endl;
-    }
-}
-
-template <class T>
-void BlgaJsonRW<T>::end(bool is_last)
-{
-    this->out_ << "\t]" << endl;
-    if(is_last){
-    
         this->out_ << "}" << endl;
     }
 }
