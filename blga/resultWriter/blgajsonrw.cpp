@@ -15,12 +15,13 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
 #include <cstring>
 #include <iostream>
-using namespace std;
-
 
 #include "blgajsonrw.h"
+
+using namespace std;
 
 template <class T>
 BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
@@ -72,7 +73,6 @@ void BlgaJsonRW<T>::endIteration(bool is_last=false)
     } else {
         this->out_ << "," << endl;
     }
-    //this->out_ << endl;
 }
 
 template <class T>
