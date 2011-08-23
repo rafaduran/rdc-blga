@@ -16,3 +16,6 @@ rdc-blga.kdev4
 *swp
 *json
 prueba*
+.project
+.pydevproject
+install_manifest.txt
