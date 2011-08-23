@@ -22,25 +22,24 @@ cmake_minimum_required(VERSION 2.8.0)
 PROJECT(blga-tests)
 
 include_directories(./gtest-1.6.0/include
-                    ./unittest
-                    ../blga/carlosFitnessFunctions
-                    ../blga/resultWriter
+                    ../../blga/carlosFitnessFunctions
+                    ../../blga/resultWriter
     )
 
 ADD_SUBDIRECTORY(${CMAKE_CURRENT_SOURCE_DIR}/gtest-1.6.0)
 
-SET(FITNESS ../blga/carlosFitnessFunctions/PeriodicEqual.cpp
-            ../blga/carlosFitnessFunctions/FitnessFunction.cpp
-            ../blga/carlosFitnessFunctions/HumpFunction.cpp
-            ../blga/carlosFitnessFunctions/PeriodicUnequal.cpp
+SET(FITNESS ../../blga/carlosFitnessFunctions/PeriodicEqual.cpp
+            ../../blga/carlosFitnessFunctions/FitnessFunction.cpp
+            ../../blga/carlosFitnessFunctions/HumpFunction.cpp
+            ../../blga/carlosFitnessFunctions/PeriodicUnequal.cpp
    )
 
-SET(WRITERS ../blga/resultWriter/resultwriter.cpp
-            ../blga/resultWriter/blgajsonrw.cpp
+SET(WRITERS ../../blga/resultWriter/resultwriter.cpp
+            ../../blga/resultWriter/blgajsonrw.cpp
     )
 
-SET(FITNESS_TESTS       ./unittest/fitnesstest.cpp)
-SET(RW_TESTS            ./unittest/resultwritertest.cpp)
+SET(FITNESS_TESTS       ./fitnesstest.cpp)
+SET(RW_TESTS            ./resultwritertest.cpp)
 
 
 ADD_EXECUTABLE(fitness-tests.out ${FITNESS} ${FITNESS_TESTS})
