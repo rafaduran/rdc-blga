@@ -25,3 +25,4 @@ msls*
 .settings
 *.pyc
 *offsprings
+executables
