@@ -52,6 +52,8 @@ def get_args(kwargs):
         raise ValueError("Unknown fitness function")
     else:
         args.append(kwargs['functionNumber'])
+    
+    args.append(kwargs['path'])
         
     if 'f' in kwargs:
         args.append('f' + kwargs['f'])
@@ -70,7 +72,7 @@ def run(*args, **kwargs):
     """
     Runs blga with given args
     Args:
-        <localSearch> <functionNumber> <stopc> <initRun> <numRuns>
+        <localSearch> <functionNumber> <path> <stopc> <initRun> <numRuns>
         <localSearch>:  
             Blga <itC> <blgaPopSize> (<alfa>|r<pf>) <numMates> <pamnass> <rtsnass>
             ClusterdClearing <nOff> <blgaPopSize> (<alfa>|r<pf>) <numMates> <pamnass> <rtsnass> <clRadius>
