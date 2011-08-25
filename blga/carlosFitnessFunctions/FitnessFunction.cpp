@@ -11,7 +11,8 @@
 FitnessFunction * FitnessFunction::ff = NULL;
 
 // Función encargada de crear las todas las funciones de fitness incluidas
-FitnessFunction* FitnessFunction::getFitnessFunction(int i, int numRun){
+FitnessFunction* FitnessFunction::getFitnessFunction(int i, const char* path,
+		int numRun){
     
    if (ff != NULL)
       delete ff;
@@ -21,7 +22,7 @@ FitnessFunction* FitnessFunction::getFitnessFunction(int i, int numRun){
    switch (i){
       case 0: ff = new PeriodicEqual(P1_P2_dimension); break;
       case 1: ff = new PeriodicUnequal(P1_P2_dimension); break;
-      case 2: ff = getHumpFunction(numRun); break;
+      case 2: ff = getHumpFunction(numRun, path); break;
       // Pafa HumpFunction usamos una función propia
    }
    return ff;
@@ -29,39 +30,45 @@ FitnessFunction* FitnessFunction::getFitnessFunction(int i, int numRun){
 
 /* Función encargada de crear los objetos HumpFunction. Para ello abrirá el
    fichero de configuración que debe encontrarse junto al ejecutable */
-FitnessFunction* FitnessFunction::getHumpFunction(int numRun) {
-   ifstream in;
-   in.open("./humpFunctionConfig",ifstream::in);
-  
-   if(in.fail()){
-      cout << "Error al abrir el archivo de configuración de P3. Dicho arcivo " 
-           << "debe encontrarse en el mismo directorio que el ejecutable." <<
-           endl;
-      return NULL;
-   }
+FitnessFunction* FitnessFunction::getHumpFunction(int numRun,
+		const char* path) {
+	ifstream in;
+	string ss(path);
+
+	ss.append("humpFunctionConfig");
+	in.open(ss.c_str() ,ifstream::in);
+
+	if(in.fail()){
+		cout << "Error while opening config file: "
+				<< ss.c_str() << endl;
+		return NULL;
+	}
     
-   char filename[250],aux[250];
+	char aux[250], filename[250];
     
-   in >> filename;
+	in >> filename;
     
-   sprintf(aux,"%d",numRun);
+	sprintf(aux,"%d",numRun);
     
-   strcat(filename,aux);
+	ss.clear();
+	ss.append(path);
+	ss.append(filename);
+	ss.append(aux);
     
-   int nvar, kpeaks, dimension;
-   double radius, alpha, height;
+	int nvar, kpeaks, dimension;
+	double radius, alpha, height;
 	 
 	// Obtención de parámetros
-   in >> nvar;
-   in >> kpeaks;
-   in >> radius;
-   in >> alpha;
-   in >> height;
-   in >> dimension;
+	in >> nvar;
+	in >> kpeaks;
+	in >> radius;
+	in >> alpha;
+	in >> height;
+	in >> dimension;
    
     
-   return new HumpFunction(filename, nvar, kpeaks, radius, alpha, height,
-      dimension);         
+	return new HumpFunction(ss.c_str(), nvar, kpeaks, radius, alpha,
+			height, dimension);
 }
 
 // Paso de código gray a binario

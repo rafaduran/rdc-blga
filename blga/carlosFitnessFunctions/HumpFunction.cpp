@@ -19,7 +19,7 @@
    suministra un fichero de configuración ejemplo y en Leeme.txt se explican
    todos los parámetros usados.
 */
-void HumpFunction::getPeaks( char *filename) {
+void HumpFunction::getPeaks(const char *filename) {
    int i, j, l, OK;
   
    ifstream in;
@@ -27,7 +27,7 @@ void HumpFunction::getPeaks( char *filename) {
    in.open( filename, ifstream::in );
    
    if(in.fail()){
-      cout << "Error al abrir fichero picos" << endl;
+      cout << "Error al abrir fichero picos: " << filename << endl;
       exit(1);
    }
     
@@ -40,8 +40,8 @@ void HumpFunction::getPeaks( char *filename) {
 }
 
 /* Constructor usado cuando se utiliza el tipo de configuración 0 */
-HumpFunction::HumpFunction(char *filename, int nVariables, int kpeaks, double
-   radius, double alpha, double height, int dimension) {
+HumpFunction::HumpFunction(const char *filename, int nVariables, int kpeaks,
+	double radius, double alpha, double height, int dimension) {
   this->_radius = radius;
   this->_alpha = alpha;
   this->_height = height;
@@ -55,7 +55,7 @@ HumpFunction::HumpFunction(char *filename, int nVariables, int kpeaks, double
     _peaks[i] = new double[_nVariables];
   }
 
-  getPeaks( filename);
+  getPeaks(filename);
 }
 
 /* Destructor de la función, liberamos la memoria donde se guardan los picos */

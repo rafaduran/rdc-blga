@@ -83,8 +83,9 @@ void liberaInitSolutions(char ***matrix, int numSolutions, int numRuns){
 int main(int argc, char *argv[]){
 
 
-  if (argc < 6){
-    cout << argv[0] << " <localSearch> <functionNumber> <stopc> <initRun> <numRuns>" << endl;
+  if (argc < 7){
+    cout << argv[0] << " <localSearch> <functionNumber> <path> <stopc> " <<
+    		"<initRun> <numRuns>" << endl;
     cout << endl;
     cout << "<localSearch>: ";
     LocalSearcher::showLSs();
@@ -96,12 +97,14 @@ int main(int argc, char *argv[]){
   int blgaPopSize = atoi(argv[3]);
   char *lsName = argv[1];
   Random *random = new Random();
-  int functionNumber = atoi(argv[argc - 4]);
+  int functionNumber = atoi(argv[argc - 5]);
+  const char* path= argv[argc - 4];
   char *stopCstring = argv[argc - 3];
   int initRun = atoi(argv[argc - 2]);
   int numRuns = atoi(argv[argc - 1]);
   char ***initSolutions;
-  FitnessFunction *ff = FitnessFunction::getFitnessFunction(functionNumber);
+  FitnessFunction *ff = FitnessFunction::getFitnessFunction(functionNumber,
+															path);
   
   if( ff == NULL )
     return EXIT_FAILURE;
@@ -143,7 +146,7 @@ int main(int argc, char *argv[]){
     
     comienzo = time(NULL);
     
-    ff = FitnessFunction::getFitnessFunction(functionNumber, iRuns);
+    ff = FitnessFunction::getFitnessFunction(functionNumber, path, iRuns);
     StopCondition *sc = StopCondition::getSC(stopCstring, ff);
     StopCStruct stopStruct;
     ls->setFF(ff);

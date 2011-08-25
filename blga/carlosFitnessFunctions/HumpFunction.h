@@ -23,7 +23,7 @@ using namespace std;
 class HumpFunction:public FitnessFunction {
    private:
       void inverseGrayVector(char *gray, char *binary);
-      void getPeaks(char *filename);
+      void getPeaks(const char *filename);
       // Función para leer un fichero de picos
 
       double _radius;   // Radio de los picos
@@ -36,7 +36,7 @@ class HumpFunction:public FitnessFunction {
       //stringstream _ss; // Nombre devuelto
       //Random *_random;  // _random se utiliza para calculos aleatorios 
    public:
-      HumpFunction(char *filename, int nvariables,int kpeaks, double
+      HumpFunction(const char *filename, int nvariables,int kpeaks, double
          radius,double alpha = 1.0, double height = 1.0, int dimension = 30);
 
       ~HumpFunction();

@@ -52,7 +52,8 @@ class FitnessFunction {
       
       /* Función estatica que permite la creación de todas las funciones de
          incluidas */
-      static FitnessFunction* getFitnessFunction(int i, int numRun = 0);
+      static FitnessFunction* getFitnessFunction(int i, const char* path,
+    		  int numRun = 0);
       
       // Función usada para obtener el número de variables  
       virtual int getNvariables() {return 1;};
@@ -61,7 +62,7 @@ class FitnessFunction {
       virtual void inverseGrayVector(char *gray, char *binary){return;};
       
       // Función usada para crear las funciones hump  
-      static FitnessFunction* getHumpFunction(int numRun);
+      static FitnessFunction* getHumpFunction(int numRun, const char* path);
       
       // Paso de código gray a código binario  
       void inverseGray(char *gray, char *binary);
