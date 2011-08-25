@@ -19,3 +19,9 @@ prueba*
 .project
 .pydevproject
 install_manifest.txt
+time
+msls*
+.cproject
+.settings
+*.pyc
+*offsprings
