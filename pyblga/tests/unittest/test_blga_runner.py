@@ -51,35 +51,9 @@ class TestBlgaRunner(unittest.TestCase):
         result, out = blga_runner.run(**self.kwargs)
         self.assertEqual(0, result, out)
         self.assertEqual('Todo bien!\n', out)
-   
-   
-    def test_long_run_ok(self):
-        """
-        Runs a long time execution
-        """
-        self.kwargs['blgaPopSize'] = '500'
-        self.kwargs['n'] = '10000'
-        self.kwargs['functionNumber'] = '2'
-        self.kwargs['endRun'] = '20'
-        result, out = blga_runner.run(**self.kwargs)
-        self.assertEqual(0, result, out)
-        self.assertEqual('Todo bien!\n', out)
-        
-    def test_long_run_clustered_clearing_ok(self):
-        """
-        Runs a long time execution
-        """
-        self.kwargs['name'] = 'ClusteredClearing'
-        self.kwargs['blgaPopSize'] = '500'
-        self.kwargs['n'] = '10000'
-        self.kwargs['functionNumber'] = '2'
-        self.kwargs['clRadius'] =  '0.1'
-        result, out = blga_runner.run(**self.kwargs)
-        self.assertEqual(0, result, out)
-        self.assertEqual('Todo bien!\n', out)
         
         
-    def test_wrong_localsearcher(self):
+    def test_error_wrong_localsearcher(self):
         """
         Checks running with wrong localsearcher name
         """
@@ -89,11 +63,31 @@ class TestBlgaRunner(unittest.TestCase):
         self.assert_(out.startswith('Blga:Error'), out)
    
         
-    def test_error_parsing_localsearcher(self):
+    def test_error_no_name(self):
         """
         Checks parsing args with no name attribute
         """
         self.kwargs.pop('name')
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(1, result, out)
+        self.assert_(out.startswith('Blga:Error'), out)
+        
+        
+    def test_error_no_stop_criteria(self):
+        """
+        Checks parsing arsg with no stop criteria
+        """
+        self.kwargs.pop('n')
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(1, result, out)
+        self.assert_(out.startswith('Blga:Error'), out)
+
+        
+    def test_error_two_stop_criteria(self):
+        """
+        Checks parsing args with both stop criteria
+        """
+        self.kwargs['f'] = '0.5'
         result, out = blga_runner.run(**self.kwargs)
         self.assertEqual(1, result, out)
         self.assert_(out.startswith('Blga:Error'), out)

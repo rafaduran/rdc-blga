@@ -55,9 +55,9 @@ def get_args(kwargs):
     
     args.append(kwargs['path'])
         
-    if 'f' in kwargs:
+    if 'f' in kwargs and not 'n' in kwargs:
         args.append('f' + kwargs['f'])
-    elif 'n' in kwargs:
+    elif 'n' in kwargs and not 'f' in kwargs:
         args.append('n' + kwargs['n'])
     else:
         raise ValueError('Unknown stop criteria')
@@ -87,9 +87,11 @@ def run(*args, **kwargs):
     call_args = [blga_path,]
     [call_args.append(arg) for arg in args]
     logging.debug(call_args)
-    blga = subprocess.Popen(call_args, bufsize=-1, stdout=subprocess.PIPE)
-    out, _ = blga.communicate()
+    blga = subprocess.Popen(call_args, bufsize=-1, stderr=subprocess.STDOUT,
+                            stdout=subprocess.PIPE)
+    out, err = blga.communicate()
     logging.debug(out)
+    logging.debug(err)
     return blga.returncode, out
 
 
