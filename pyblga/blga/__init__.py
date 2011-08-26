@@ -7,8 +7,6 @@ import subprocess
 
 top_dir = os.path.join(os.path.dirname(__file__),'../../')
 
-print(top_dir)
-
 if not os.path.exists("".join((top_dir,'executables/blga.out'))):
     if subprocess.call(''.join(['cd ',top_dir, ' && make install']), 
                        shell=True):
