@@ -62,6 +62,9 @@ def get_args(kwargs):
     else:
         raise ValueError('Unknown stop criteria')
     
+    if kwargs['initRun'] >= kwargs['endRun']:
+        raise ValueError('initRun must be lower than endRun')
+    
     args.append(kwargs['initRun'])
     args.append(kwargs['endRun'])
     
