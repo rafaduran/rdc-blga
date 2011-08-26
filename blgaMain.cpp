@@ -212,7 +212,7 @@ int main(int argc, char *argv[]){
 
   delete random;
   delete ls;
-  cout << "Todo bien!" << endl;
+  cout << "Ok!" << endl;
   
   return EXIT_SUCCESS;
 }
