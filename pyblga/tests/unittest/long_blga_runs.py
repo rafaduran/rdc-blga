@@ -11,6 +11,11 @@ Long description
 
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import print_function
+from future_builtins import *
+
 import unittest2 as unittest
 
 import pyblga.tests.unittest.test_blga_runner as tbr
