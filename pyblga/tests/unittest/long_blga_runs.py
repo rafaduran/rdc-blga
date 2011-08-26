@@ -31,7 +31,7 @@ class LongBlgaRuns(tbr.TestBlgaRunner):
         self.kwargs['endRun'] = '20'
         result, out = blga_runner.run(**self.kwargs)
         self.assertEqual(0, result, out)
-        self.assertEqual('Todo bien!\n', out)
+        self.assertEqual('Ok!\n', out)
         
     def test_long_run_clustered_clearing_ok(self):
         """
@@ -42,9 +42,10 @@ class LongBlgaRuns(tbr.TestBlgaRunner):
         self.kwargs['n'] = '10000'
         self.kwargs['functionNumber'] = '2'
         self.kwargs['clRadius'] =  '0.1'
+        self.kwargs['endRun'] = '20'
         result, out = blga_runner.run(**self.kwargs)
         self.assertEqual(0, result, out)
-        self.assertEqual('Todo bien!\n', out)
+        self.assertEqual('Ok!\n', out)
 
 
 if __name__ == "__main__":

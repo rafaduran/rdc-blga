@@ -18,6 +18,7 @@ from __future__ import print_function
 import unittest2 as unittest
 import pyblga.blga.runner as blga_runner
 
+
 class TestBlgaRunner(unittest.TestCase):
     """
     Tests something ...
@@ -44,13 +45,53 @@ class TestBlgaRunner(unittest.TestCase):
         del self.kwargs
         
         
-    def test_run_ok(self):
+    def test_run_p1_ok(self):
         """
-        Checks ...
+        Tinny run
         """
         result, out = blga_runner.run(**self.kwargs)
         self.assertEqual(0, result, out)
-        self.assertEqual('Todo bien!\n', out)
+        self.assertEqual('Ok!\n', out)
+        
+    def test_run_p2_ok(self):
+        """
+        Tinny P2 run
+        """
+        self.kwargs['functionNumber'] = '1'
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(0, result, out)
+        self.assertEqual('Ok!\n', out)
+        
+        
+    def test_run_list_args(self):
+        """
+        Test running from args instead o kwargs 
+        """
+        args = []
+        args.append('blga')
+        args.append('10')
+        args.append('100')
+        args.append('7')
+        args.append('5')
+        args.append('5')
+        args.append('14')
+        args.append('0')
+        args.append('/home/rdc/projects/rdc-blga/executables/')
+        args.append('n1000')
+        args.append('0')
+        args.append('1')
+        result, out = blga_runner.run(*args)
+        self.assertEqual(0, result, out)
+        self.assertEqual('Ok!\n', out)
+        
+    def test_run_r(self):
+        """
+        Tinny run
+        """
+        self.kwargs['r'] = '0.1'
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(0, result, out)
+        self.assertEqual('Ok!\n', out)
         
         
     def test_error_wrong_localsearcher(self):
@@ -92,6 +133,36 @@ class TestBlgaRunner(unittest.TestCase):
         self.assertEqual(1, result, out)
         self.assert_(out.startswith('Blga:Error'), out)
         
+    
+    def test_missing_arg(self):
+        """
+        Checks parsing args with no name attribute
+        """
+        self.kwargs.pop('pamnass')
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(1, result, out)
+        self.assert_(out.startswith('Blga:Error'), out)
+        
+    
+    def test_wrong_run_limits(self):
+        """
+        Checks wrong initRun/endRun
+        """
+        self.kwargs['initRun'] = '3'
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(1, result, out)
+        self.assert_(out.startswith('Blga:Error'), out)
+        
+        
+    def test_missing_clearingRadius(self):
+        """
+        Checks running ClusteredClearing with no clearingRadius
+        """
+        self.kwargs['name'] = 'ClusteredClearing'
+        result, out = blga_runner.run(**self.kwargs)
+        self.assertEqual(1, result, out)
+        self.assert_(out.startswith('Blga:Error'), out)
+
         
 if __name__ == "__main__":
     unittest.main()
