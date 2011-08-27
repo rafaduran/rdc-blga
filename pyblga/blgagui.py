@@ -1,0 +1,187 @@
+#!/usr/bin/env python
+# -*- Encoding: utf-8 -*-
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+"""
+:py:mod:`~pyblga.blgagui` --- Very short description
+======================================
+Long description
+
+.. module:: pyblga.blgagui
+    :synopsis: Short description
+
+.. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
+"""
+from __future__ import unicode_literals
+from __future__ import absolute_import
+from __future__ import print_function
+from future_builtins import * #@UnusedWildImport
+
+import sys
+import functools
+
+import sip
+sip.setapi('QString', 2) # utf-8
+
+from PyQt4 import QtCore
+from PyQt4 import QtGui 
+
+# TODO: add log widget
+# TODO: interface to ask which draws are available
+# TDOO: save splliter state
+
+class MyMainWindow(QtGui.QMainWindow):
+    """
+    Main window for Blga GUI
+    """
+    
+    def __init__(self, parent=None):
+        super(MyMainWindow, self).__init__(parent)
+
+        centralwidget = QtGui.QWidget()
+        grid_layout = QtGui.QGridLayout(centralwidget)
+        splitter = QtGui.QSplitter(centralwidget)
+        splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.list_widget = QtGui.QListWidget(splitter)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
+                                       QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.list_widget.sizePolicy().\
+                                     hasHeightForWidth())
+        self.list_widget.setSizePolicy(sizePolicy)
+        self.list_widget.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
+                                                  QtCore.QLocale.UnitedStates))
+        layout_widget = QtGui.QWidget(splitter)
+        vertical_layout = QtGui.QVBoxLayout(layout_widget)
+        vertical_layout.setMargin(0)
+        self.label = QtGui.QLabel(layout_widget)
+        self.label.setText("No data to show")
+        vertical_layout.addWidget(self.label)
+        self.table = QtGui.QTableWidget(layout_widget)
+        self.table.setColumnCount(0)
+        self.table.setRowCount(0)
+        vertical_layout.addWidget(self.table)
+        grid_layout.addWidget(splitter, 0, 0, 1, 1)
+        self.setCentralWidget(centralwidget)
+        self.createMenu()
+        statusbar = self.statusBar()
+        statusbar.setSizeGripEnabled(False)
+        statusbar.showMessage("Ready", 5000)
+        
+        settings = QtCore.QSettings()
+        size = settings.value("MainWindow/Size",
+                              QtCore.QVariant(QtCore.QSize(1020, 610))).toSize()
+        self.resize(size)
+        position = settings.value("MainWindow/Position",
+                            QtCore.QVariant(QtCore.QPoint(0, 0))).toPoint()
+        self.move(position)
+        self.restoreState(
+                settings.value("MainWindow/State").toByteArray())
+        
+        self.setWindowTitle("Blga GUI")
+        self.updateFileMenu()
+        
+        self.show()
+        
+        
+    def updateUI(self):
+        """
+        Shows menu
+        """
+        pass
+    
+    @QtCore.pyqtSlot()
+    def updateFileMenu(self):
+        """
+        Updates menu
+        """
+        pass
+    
+    
+    @QtCore.pyqtSlot(int)
+    def draw(self, index):
+        pass 
+    
+    
+    def createMenu(self):
+        """
+        Creates Menu on startup
+        """
+        self.menu = self.menuBar()
+        run_action = self.createAction("&New Blga run", self.run,
+                QtGui.QKeySequence.New, "new run", "New Blga run")
+        import_action = self.createAction("&Import", self.import_from_file,
+                None, "fileopen", "Import data from an existing file")
+        export_action = self.createAction("&Export", self.export_to_file,
+                None, "filesave", "Export to file")
+        
+        blga_menu = self.menu.addMenu("&Blga")
+        self.addActions(blga_menu,(run_action, None, import_action, 
+                                  export_action))
+        
+        chart_menu = self.menu.addMenu("&Charts menu")
+        for index, draw_type in enumerate(("Line chart", "Pie chart",)):
+            draw = functools.partial(self.draw, index)
+            draw_action = self.createAction(draw_type, draw, None, None, 
+                                            draw_type)
+            self.addActions(chart_menu, (draw_action,))
+
+    
+    def createAction(self, text, slot=None, shortcut=None, icon=None,
+                     tip=None, checkable=False, signal="triggered()"):
+        action = QtGui.QAction(text, self)
+        if icon is not None:
+            action.setIcon(QtGui.QIcon(":/%s.png" % icon))
+        if shortcut is not None:
+            action.setShortcut(shortcut)
+        if tip is not None:
+            action.setToolTip(tip)
+            action.setStatusTip(tip)
+        if slot is not None:
+            self.connect(action, QtCore.SIGNAL(signal), slot)
+        if checkable:
+            action.setCheckable(True)
+        return action
+
+
+    def addActions(self, target, actions):
+        for action in actions:
+            if action is None:
+                target.addSeparator()
+            else:
+                target.addAction(action)
+    
+    
+    @QtCore.pyqtSlot()            
+    def run(self):
+        pass
+    
+    
+    @QtCore.pyqtSlot()
+    def import_from_file(self):
+        pass
+    
+    
+    @QtCore.pyqtSlot()
+    def export_to_file(self):
+        pass
+    
+    
+    def closeEvent(self, event):
+        settings = QtCore.QSettings()
+        settings.setValue("MainWindow/Size", QtCore.QVariant(self.size()))
+        settings.setValue("MainWindow/Position", QtCore.QVariant(self.pos()))
+        settings.setValue("MainWindow/State", QtCore.QVariant(self.saveState()))
+
+
+
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    app.setOrganizationName("RDC")
+    app.setOrganizationDomain("rdc.dynds-at-home.com")
+    app.setApplicationName("Blga Gui")
+    #app.setWindowIcon(QIcon(":/icon.png"))
+    form = MyMainWindow()
+    form.show()
+    app.exec_()    
+    
