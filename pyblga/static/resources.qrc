@@ -1,10 +1,13 @@
 <!DOCTYPE RCC><RCC version="1.0">
 <qresource>
-<file alias="filenew.png">images/filenew.png</file>
-<file alias="fileopen.png">images/fileopen.png</file>
-<file alias="filesave.png">images/filesave.png</file>
 <file alias="dna.png">images/dna.png</file>
-<file alias="adn.png">images/adn.png</file>
-<file alias="genetics.png">images/genetics.png</file>
+<file alias="helpcontents.png">images/help-contents.png</file>
+<file alias="about.png">images/help-about.png</file>
+<file alias="filequit.png">images/filequit.png</file>
+<file alias="import.png">images/DataImport.png</file>
+<file alias="export.png">images/export.png</file>
+<file alias="line.png">images/line-chart.png</file>
+<file alias="pie.png">images/pie.png</file>
+<file alias="run.png">images/run.png</file>
 </qresource>
 </RCC>
