@@ -1,0 +1,10 @@
+<!DOCTYPE RCC><RCC version="1.0">
+<qresource>
+<file alias="filenew.png">images/filenew.png</file>
+<file alias="fileopen.png">images/fileopen.png</file>
+<file alias="filesave.png">images/filesave.png</file>
+<file alias="dna.png">images/dna.png</file>
+<file alias="adn.png">images/adn.png</file>
+<file alias="genetics.png">images/genetics.png</file>
+</qresource>
+</RCC>

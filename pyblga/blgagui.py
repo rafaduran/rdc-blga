@@ -23,7 +23,9 @@ import sip
 sip.setapi('QString', 2) # utf-8
 
 from PyQt4 import QtCore
-from PyQt4 import QtGui 
+from PyQt4 import QtGui
+
+import  pyblga.static.qrc_resources #@UnusedImport
 
 # TODO: add log widget
 # TODO: interface to ask which draws are available
@@ -98,7 +100,7 @@ class BlgaGUI(QtGui.QMainWindow):
         """
         self.menu = self.menuBar()
         run_action = self.createAction("&New Blga run", self.run,
-                QtGui.QKeySequence.New, "new run", "New Blga run")
+                QtGui.QKeySequence.New, "filenew", "New Blga run")
         import_action = self.createAction("&Import", self.import_from_file,
                 None, "fileopen", "Import data from an existing file")
         export_action = self.createAction("&Export", self.export_to_file,
@@ -190,7 +192,7 @@ if __name__ == '__main__':
     app.setOrganizationName("RDC")
     app.setOrganizationDomain("rdc.dynds-at-home.com")
     app.setApplicationName("BlgaGUI")
-    #app.setWindowIcon(QIcon(":/icon.png"))
+    app.setWindowIcon(QtGui.QIcon(":/dna.png"))
     form = BlgaGUI()
     form.show()
     app.exec_()    
