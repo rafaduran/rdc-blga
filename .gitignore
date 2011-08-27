@@ -26,3 +26,4 @@ msls*
 *.pyc
 *offsprings
 executables
+*qrc_*.py
