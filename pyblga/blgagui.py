@@ -14,7 +14,7 @@ Long description
 from __future__ import unicode_literals
 from __future__ import absolute_import
 from __future__ import print_function
-from future_builtins import * #@UnusedWildImport
+from future_builtins import * #@UnusedWildImport pylint:disable=W0614
 
 import sys
 import functools
@@ -27,21 +27,20 @@ from PyQt4 import QtGui
 
 # TODO: add log widget
 # TODO: interface to ask which draws are available
-# TDOO: save splliter state
 
-class MyMainWindow(QtGui.QMainWindow):
+class BlgaGUI(QtGui.QMainWindow):
     """
     Main window for Blga GUI
     """
     
     def __init__(self, parent=None):
-        super(MyMainWindow, self).__init__(parent)
+        super(BlgaGUI, self).__init__(parent)
 
         centralwidget = QtGui.QWidget()
         grid_layout = QtGui.QGridLayout(centralwidget)
-        splitter = QtGui.QSplitter(centralwidget)
-        splitter.setOrientation(QtCore.Qt.Horizontal)
-        self.list_widget = QtGui.QListWidget(splitter)
+        self.splitter = QtGui.QSplitter(centralwidget)
+        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.list_widget = QtGui.QListWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
                                        QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -51,7 +50,7 @@ class MyMainWindow(QtGui.QMainWindow):
         self.list_widget.setSizePolicy(sizePolicy)
         self.list_widget.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
                                                   QtCore.QLocale.UnitedStates))
-        layout_widget = QtGui.QWidget(splitter)
+        layout_widget = QtGui.QWidget(self.splitter)
         vertical_layout = QtGui.QVBoxLayout(layout_widget)
         vertical_layout.setMargin(0)
         self.label = QtGui.QLabel(layout_widget)
@@ -61,23 +60,13 @@ class MyMainWindow(QtGui.QMainWindow):
         self.table.setColumnCount(0)
         self.table.setRowCount(0)
         vertical_layout.addWidget(self.table)
-        grid_layout.addWidget(splitter, 0, 0, 1, 1)
+        grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(centralwidget)
         self.createMenu()
         statusbar = self.statusBar()
         statusbar.setSizeGripEnabled(False)
-        statusbar.showMessage("Ready", 5000)
-        
-        settings = QtCore.QSettings()
-        size = settings.value("MainWindow/Size",
-                              QtCore.QVariant(QtCore.QSize(1020, 610))).toSize()
-        self.resize(size)
-        position = settings.value("MainWindow/Position",
-                            QtCore.QVariant(QtCore.QPoint(0, 0))).toPoint()
-        self.move(position)
-        self.restoreState(
-                settings.value("MainWindow/State").toByteArray())
-        
+        self.loadSettings()
+        statusbar.showMessage("Ready", 5000)        
         self.setWindowTitle("Blga GUI")
         self.updateFileMenu()
         
@@ -120,7 +109,7 @@ class MyMainWindow(QtGui.QMainWindow):
                                   export_action))
         
         chart_menu = self.menu.addMenu("&Charts menu")
-        for index, draw_type in enumerate(("Line chart", "Pie chart",)):
+        for index, draw_type in enumerate(("&Line chart", "&Pie chart",)):
             draw = functools.partial(self.draw, index)
             draw_action = self.createAction(draw_type, draw, None, None, 
                                             draw_type)
@@ -167,21 +156,42 @@ class MyMainWindow(QtGui.QMainWindow):
         pass
     
     
+    def loadSettings(self):
+        settings = QtCore.QSettings()
+        size = settings.value("MainWindow/Size",
+                              QtCore.QVariant(QtCore.QSize(1020, 610))).toSize()
+        self.resize(size)
+        position = settings.value("MainWindow/Position",
+                            QtCore.QVariant(QtCore.QPoint(0, 0))).toPoint()
+        self.move(position)
+        self.restoreState(
+                settings.value("MainWindow/State").toByteArray())
+        sizes = [211, 411]
+        for index, _ in enumerate(sizes):
+            sizes[index] = settings.value("MainWindow/Splitter/{0}".\
+                        format(index), sizes[index]).toInt()[0]
+        
+        self.splitter.setSizes(sizes)
+    
+    
     def closeEvent(self, event):
         settings = QtCore.QSettings()
         settings.setValue("MainWindow/Size", QtCore.QVariant(self.size()))
         settings.setValue("MainWindow/Position", QtCore.QVariant(self.pos()))
         settings.setValue("MainWindow/State", QtCore.QVariant(self.saveState()))
-
+        sizes = self.splitter.sizes()
+        for index, size in enumerate(sizes):
+            settings.setValue("MainWindow/Splitter/{0}".format(index), 
+                              QtCore.QVariant(size))
 
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
     app.setOrganizationName("RDC")
     app.setOrganizationDomain("rdc.dynds-at-home.com")
-    app.setApplicationName("Blga Gui")
+    app.setApplicationName("BlgaGUI")
     #app.setWindowIcon(QIcon(":/icon.png"))
-    form = MyMainWindow()
+    form = BlgaGUI()
     form.show()
     app.exec_()    
     
