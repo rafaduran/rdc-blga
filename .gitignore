@@ -27,3 +27,5 @@ msls*
 *offsprings
 executables
 *qrc_*.py
+*.sqlite3
+*.db
