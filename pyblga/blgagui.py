@@ -44,32 +44,7 @@ class BlgaGUI(QtGui.QMainWindow):
     def __init__(self, parent=None):
         super(BlgaGUI, self).__init__(parent)
 
-        centralwidget = QtGui.QWidget()
-        grid_layout = QtGui.QGridLayout(centralwidget)
-        self.splitter = QtGui.QSplitter(centralwidget)
-        self.splitter.setOrientation(QtCore.Qt.Horizontal)
-        self.list_widget = QtGui.QListWidget(self.splitter)
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
-                                       QtGui.QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.list_widget.sizePolicy().\
-                                     hasHeightForWidth())
-        self.list_widget.setSizePolicy(sizePolicy)
-        self.list_widget.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
-                                                  QtCore.QLocale.UnitedStates))
-        layout_widget = QtGui.QWidget(self.splitter)
-        vertical_layout = QtGui.QVBoxLayout(layout_widget)
-        vertical_layout.setMargin(0)
-        self.label = QtGui.QLabel(layout_widget)
-        self.label.setText("No data to show")
-        vertical_layout.addWidget(self.label)
-        self.table = QtGui.QTableWidget(layout_widget)
-        self.table.setColumnCount(0)
-        self.table.setRowCount(0)
-        vertical_layout.addWidget(self.table)
-        grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
-        self.setCentralWidget(centralwidget)
+        self.makeLayout()
         self.createMenu()
         self.status_bar = self.statusBar()
         self.status_bar.setSizeGripEnabled(False)
@@ -135,6 +110,34 @@ class BlgaGUI(QtGui.QMainWindow):
     def export_to_file(self):
         pass
     
+    
+    def makeLayout(self):
+        centralwidget = QtGui.QWidget()
+        grid_layout = QtGui.QGridLayout(centralwidget)
+        self.splitter = QtGui.QSplitter(centralwidget)
+        self.splitter.setOrientation(QtCore.Qt.Horizontal)
+        self.list_widget = QtGui.QListWidget(self.splitter)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
+                                       QtGui.QSizePolicy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.list_widget.sizePolicy().\
+                                     hasHeightForWidth())
+        self.list_widget.setSizePolicy(sizePolicy)
+        self.list_widget.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
+                                                  QtCore.QLocale.UnitedStates))
+        layout_widget = QtGui.QWidget(self.splitter)
+        vertical_layout = QtGui.QVBoxLayout(layout_widget)
+        vertical_layout.setMargin(0)
+        self.label = QtGui.QLabel(layout_widget)
+        self.label.setText("No data to show")
+        vertical_layout.addWidget(self.label)
+        self.table = QtGui.QTableWidget(layout_widget)
+        self.table.setColumnCount(0)
+        self.table.setRowCount(0)
+        vertical_layout.addWidget(self.table)
+        grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
+        self.setCentralWidget(centralwidget)
     
     def createMenu(self):
         """
@@ -240,7 +243,7 @@ class BlgaGUI(QtGui.QMainWindow):
             
     def okToContinue(self):
         if  QtGui.QMessageBox.Yes == \
-            QtGui.QMessageBox.question(self, 'Exit', 'Are you suer?', 
+            QtGui.QMessageBox.question(self, 'Exit', 'Are you sure?', 
                 QtGui.QMessageBox.Yes | QtGui.QMessageBox.No):
             return True
         return False
