@@ -116,26 +116,26 @@ class BlgaGUI(QtGui.QMainWindow):
         grid_layout = QtGui.QGridLayout(centralwidget)
         self.splitter = QtGui.QSplitter(centralwidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
-        self.list_widget = QtGui.QListWidget(self.splitter)
+        self.runs_table = QtGui.QTableWidget(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
                                        QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.list_widget.sizePolicy().\
+        sizePolicy.setHeightForWidth(self.runs_table.sizePolicy().\
                                      hasHeightForWidth())
-        self.list_widget.setSizePolicy(sizePolicy)
-        self.list_widget.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
-                                                  QtCore.QLocale.UnitedStates))
+        #self.runs_table.setSizePolicy(sizePolicy)
+        #self.runs_table.setLocale(QtCore.QLocale(QtCore.QLocale.English, 
+        #                                          QtCore.QLocale.UnitedStates))
         layout_widget = QtGui.QWidget(self.splitter)
         vertical_layout = QtGui.QVBoxLayout(layout_widget)
         vertical_layout.setMargin(0)
         self.label = QtGui.QLabel(layout_widget)
         self.label.setText("No data to show")
         vertical_layout.addWidget(self.label)
-        self.table = QtGui.QTableWidget(layout_widget)
-        self.table.setColumnCount(0)
-        self.table.setRowCount(0)
-        vertical_layout.addWidget(self.table)
+        self.results_table = QtGui.QTableWidget(layout_widget)
+        self.results_table.setColumnCount(0)
+        self.results_table.setRowCount(0)
+        vertical_layout.addWidget(self.results_table)
         grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(centralwidget)
     
