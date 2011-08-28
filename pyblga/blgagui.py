@@ -17,7 +17,10 @@ from __future__ import print_function
 from future_builtins import * #@UnusedWildImport pylint:disable=W0614
 
 import sys
+import os
 import functools
+import platform
+import webbrowser
 
 import sip
 sip.setapi('QString', 2) # utf-8
@@ -29,6 +32,9 @@ import  pyblga.static.qrc_resources #@UnusedImport
 
 # TODO: add log widget
 # TODO: interface to ask which draws are available
+
+__version__ = '0.1'
+__blga_version__ = '1.1.0'
 
 class BlgaGUI(QtGui.QMainWindow):
     """
@@ -65,10 +71,10 @@ class BlgaGUI(QtGui.QMainWindow):
         grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(centralwidget)
         self.createMenu()
-        statusbar = self.statusBar()
-        statusbar.setSizeGripEnabled(False)
+        self.status_bar = self.statusBar()
+        self.status_bar.setSizeGripEnabled(False)
         self.loadSettings()
-        statusbar.showMessage("Ready", 5000)        
+        self.status_bar.showMessage("Ready", 5000)        
         self.setWindowTitle("Blga GUI")
         self.updateFileMenu()
         
@@ -96,11 +102,37 @@ class BlgaGUI(QtGui.QMainWindow):
     
     @QtCore.pyqtSlot(int)
     def showHelp(self):
-        pass
+        help_file = "static/html/help.html"
+        helppath = os.path.join(os.path.dirname(__file__), help_file)
+        webbrowser.open_new("file://{0}".format(helppath))
     
     
     @QtCore.pyqtSlot(int)
     def about(self):
+        QtGui.QMessageBox.about(self, "About BlgaGUI",
+                """<b>Blga Grpaphic User Interface</b> v {0}
+                <p>Copyright &copy; 2011 RDC 
+                <p>This application can be used to manage Blga 
+                V {1} runs and results.
+                <p>Python {2} - Qt {3} - PyQt {4} on {5}""".format(
+                __version__, __blga_version__, platform.python_version(),
+                QtCore.QT_VERSION_STR, QtCore.PYQT_VERSION_STR, 
+                platform.system()))
+
+    
+   
+    @QtCore.pyqtSlot()            
+    def run(self):
+        pass
+    
+    
+    @QtCore.pyqtSlot()
+    def import_from_file(self):
+        pass
+    
+    
+    @QtCore.pyqtSlot()
+    def export_to_file(self):
         pass
     
     
@@ -144,8 +176,7 @@ class BlgaGUI(QtGui.QMainWindow):
                                          "about", "About BlgaGUI")
         
         help_menu = self.menu.addMenu("H&elp")
-        self.addActions(help_menu, (help_action, about_action,))
-        
+        self.addActions(help_menu, (help_action, about_action,))    
 
     
     def createAction(self, text, slot=None, shortcut=None, icon=None,
@@ -173,21 +204,6 @@ class BlgaGUI(QtGui.QMainWindow):
                 target.addAction(action)
     
     
-    @QtCore.pyqtSlot()            
-    def run(self):
-        pass
-    
-    
-    @QtCore.pyqtSlot()
-    def import_from_file(self):
-        pass
-    
-    
-    @QtCore.pyqtSlot()
-    def export_to_file(self):
-        pass
-    
-    
     def loadSettings(self):
         settings = QtCore.QSettings()
         size = settings.value("MainWindow/Size",
@@ -207,14 +223,27 @@ class BlgaGUI(QtGui.QMainWindow):
     
     
     def closeEvent(self, event):
-        settings = QtCore.QSettings()
-        settings.setValue("MainWindow/Size", QtCore.QVariant(self.size()))
-        settings.setValue("MainWindow/Position", QtCore.QVariant(self.pos()))
-        settings.setValue("MainWindow/State", QtCore.QVariant(self.saveState()))
-        sizes = self.splitter.sizes()
-        for index, size in enumerate(sizes):
-            settings.setValue("MainWindow/Splitter/{0}".format(index), 
+        if self.okToContinue():
+
+            settings = QtCore.QSettings()
+            settings.setValue("MainWindow/Size", QtCore.QVariant(self.size()))
+            settings.setValue("MainWindow/Position", QtCore.QVariant(self.pos()))
+            settings.setValue("MainWindow/State", QtCore.QVariant(self.saveState()))
+            sizes = self.splitter.sizes()
+            for index, size in enumerate(sizes):
+                settings.setValue("MainWindow/Splitter/{0}".format(index), 
                               QtCore.QVariant(size))
+            event.accept()
+        else:
+            event.ignore()
+            
+            
+    def okToContinue(self):
+        if  QtGui.QMessageBox.Yes == \
+            QtGui.QMessageBox.question(self, 'Exit', 'Are you suer?', 
+                QtGui.QMessageBox.Yes | QtGui.QMessageBox.No):
+            return True
+        return False
 
 
 if __name__ == '__main__':
