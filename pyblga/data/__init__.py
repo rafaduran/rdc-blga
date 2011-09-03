@@ -8,11 +8,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import joinedload, aliased, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-import data.base_models as models 
+import data.base_models as bases 
 
 _ENGINE = None
 _MAKER = None
-BASE = models.Base
+BASE = bases.Base
 
 
 OPTIONS = {'debug': True, 
@@ -67,7 +67,7 @@ def register_models(options):
     tables = []
     for model in model_objects:
         try:
-            model_class = getattr(models, model)
+            model_class = getattr(bases, model)
             tables.append(model_class.__table__)
         except AttributeError as err:
             logging.error("Unknown model: {0}".format(model))
