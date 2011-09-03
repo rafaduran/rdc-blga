@@ -8,7 +8,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import joinedload, aliased, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-import data.models as models 
+import data.base_models as models 
 
 _ENGINE = None
 _MAKER = None

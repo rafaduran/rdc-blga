@@ -14,11 +14,12 @@ Long description
 
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, \
     UniqueConstraint
-import data.jsoncol as jsoncol
-from data import get_session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, object_mapper
+
+import data.jsoncol as jsoncol
+import data
 
 Base = declarative_base()
 
@@ -32,7 +33,7 @@ class BlgaBase(object):
         """Save this object."""
 
         if not session:
-            session = get_session()
+            session = data.get_session()
         session.add(self)
         try:
             session.flush()
@@ -80,7 +81,7 @@ def with_orm_session(func):
     def inner(*args, **kwargs):
         if 'session' not in kwargs or \
             kwargs['session'] is None:
-            kwargs['session'] = get_session()
+            kwargs['session'] = data.get_session()
         with kwargs['sesion'].begin():
             return func(*args, **kwargs)
     return inner

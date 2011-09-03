@@ -9,10 +9,10 @@
 Taken `from <http://www.sqlalchemy.org/trac/wiki/UsageRecipes/JSONColumn>`_ and
 changed to fit my needs.
 """
-
-from sqlalchemy import types
 import copy
 import json
+
+from sqlalchemy import types
 
 json_null = object()
 
