@@ -8,10 +8,10 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import data
-import data.base_models as models
+import pyblga.data as data
+import pyblga.data.base_models as models
 
-class SearcherAPI(object):
+class SearchersAPI(object):
     """
     Initialization description
     

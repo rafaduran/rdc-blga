@@ -11,7 +11,7 @@
 import data
 import data.base_models as models
 
-class ResultAPI(object):
+class ResultsAPI(object):
     """
     Initialization description
     

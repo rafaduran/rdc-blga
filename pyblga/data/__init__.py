@@ -20,7 +20,7 @@ OPTIONS = {'debug': True,
            'timeout': 3600,
            'sql_connection': 'sqlite:///blga.sqlite3',
            'models': ['Runs', 'Parameters', 'Results', 'RunsParamsAssoc', 
-                      'Searcher'] 
+                      'Searchers'] 
            }
 
 def configure_backend(options=OPTIONS):

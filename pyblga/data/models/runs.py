@@ -37,8 +37,8 @@ class RunsAPI(object):
     def get_runs_data(self, run_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.RunsParamsAssoc).filter_by(\
-            run_id=run_id).options(data.joinedload(models.Parameters), 
+        result = session.query(models.Runs).filter_by(\
+            run_id=run_id).options(data.joinedload(models.RunsParamsAssoc), 
             data.joinedload(models.Searcher))
         return result
     

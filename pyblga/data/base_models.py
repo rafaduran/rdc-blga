@@ -11,6 +11,7 @@ Long description
     
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+from __future__ import absolute_import
 
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, \
     UniqueConstraint
@@ -104,11 +105,11 @@ class Runs(BlgaBase, Base):
     searcher_id = Column(Integer, ForeignKey('searchers.searcher_id'))
     result_id = Column(Integer, ForeignKey('results.result_id'))
     
-    searcher = relationship('Searcher')
+    searcher = relationship('Searchers')
     result = relationship('Results')
     rpa = relationship(RunsParamsAssoc, cascade='all')
     
-class Searcher(BlgaBase, Base):
+class Searchers(BlgaBase, Base):
     __tablename__ = 'searchers'
     searcher_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(25), nullable=False)
