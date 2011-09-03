@@ -19,7 +19,8 @@ OPTIONS = {'debug': True,
            'verbose': False, 
            'timeout': 3600,
            'sql_connection': 'sqlite:///blga.sqlite3',
-           'models': ['Runs', 'Parameters', 'Results', 'RPReAssoc'] 
+           'models': ['Runs', 'Parameters', 'Results', 'RunsParamsAssoc', 
+                      'Searcher'] 
            }
 
 def configure_backend(options=OPTIONS):
@@ -27,7 +28,8 @@ def configure_backend(options=OPTIONS):
     Establish the database, create an engine if needed, and
     register the models.
 
-    :param options: Mapping of configuration options
+    Args:
+        options. Dictionary of configuration options
     """
     global _ENGINE
     if not _ENGINE:

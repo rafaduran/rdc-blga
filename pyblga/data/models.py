@@ -14,6 +14,8 @@ Long description
 
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, \
     UniqueConstraint
+import data.jsoncol as jsoncol
+from data import get_session
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, object_mapper
@@ -30,7 +32,6 @@ class BlgaBase(object):
         """Save this object."""
 
         if not session:
-            from pyblga.data import get_session
             session = get_session()
         session.add(self)
         try:
@@ -67,8 +68,7 @@ class BlgaBase(object):
     def iteritems(self):
         """
         Make the model object behave like a dict.
-        Includes attributes from joins.
-        """
+        Includes attributes from joins."""
         local = dict(self)
         joined = dict([(k, v) for k, v in self.__dict__.iteritems()
                       if not k[0] == '_'])
@@ -76,41 +76,57 @@ class BlgaBase(object):
         return local.iteritems()
 
 
+def with_orm_session(func):
+    def inner(*args, **kwargs):
+        if 'session' not in kwargs or \
+            kwargs['session'] is None:
+            kwargs['session'] = get_session()
+        with kwargs['sesion'].begin():
+            return func(*args, **kwargs)
+    return inner
+
+
 # Define associations first
-class RPReAssoc(BlgaBase, Base):
-    __tablename__ = 'rpra'
-    run_id = Column(Integer, ForeignKey('runs.run_id'), primary_key=True)
-    param_id = Column(Integer, ForeignKey('params.param_id'), primary_key=True)
-    result_id = Column(Integer, ForeignKey('results.result_id'), 
-                       primary_key=True)
-    
+class RunsParamsAssoc(BlgaBase, Base):
+    __tablename__ = 'runs_params'
+    run_id = Column(Integer, ForeignKey('runs.run_id'), 
+                    primary_key=True)
+    param_id = Column(Integer, ForeignKey('params.param_id'), 
+                    primary_key=True)
     run = relationship('Runs')
     param = relationship('Parameters')
-    result = relationship('Results')
+    
     
 class Runs(BlgaBase, Base):
-    """
-    :py:class:`Run` description
-    """
     __tablename__ = 'runs'
     run_id = Column(Integer, primary_key=True, autoincrement=True)
-    iterations = Column(Integer)
-    feval = Column(Integer)
-    name = Column(String(255))
-    rprR = relationship(RPReAssoc, cascade="all")
+    searcher_id = Column(Integer, ForeignKey('searchers.searcher_id'))
+    result_id = Column(Integer, ForeignKey('results.result_id'))
+    
+    searcher = relationship('Searcher')
+    result = relationship('Results')
+    rpa = relationship(RunsParamsAssoc, cascade='all')
+    
+class Searcher(BlgaBase, Base):
+    __tablename__ = 'searchers'
+    searcher_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(25), nullable=False)
+    tag = Column(String(50))
+    __table_args__ = (UniqueConstraint("name", "tag"), {})
+    runs = relationship(Runs, backref='searchers', cascade="all")
     
 
 class Parameters(BlgaBase, Base):
     __tablename__ = 'params'
     param_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String(255))
-    value = Column(Float)
+    name = Column(String(25), nullable=False)
+    value = Column(Float, nullable=False)
     __table_args__ = (UniqueConstraint("name", "value"), {})
-    rprP = relationship(RPReAssoc, cascade="all")
+    rpa = relationship(RunsParamsAssoc, cascade='all')
 
 
 class Results(BlgaBase, Base):
     __tablename__ = 'results'
     result_id = Column(Integer, primary_key=True, autoincrement=True)
-    result = Column(Integer)
-    rprRe = relationship(RPReAssoc, cascade="all")
+    result = Column(jsoncol.JSONCol, nullable=False)
+    run = relationship(Runs, backref='results', cascade="all")
