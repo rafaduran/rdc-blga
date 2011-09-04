@@ -8,8 +8,8 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import data
-import data.base_models as models
+import pyblga.data as data
+import pyblga.data.base_models as bases
 
 class ResultsAPI(object):
     """
@@ -23,19 +23,19 @@ class ResultsAPI(object):
     def get(self, result_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.Results).filter_by(result_id=result_id).first()
+        result = session.query(bases.Results).filter_by(result_id=result_id).first()
         return result
     
     
     def get_all(self, session=None):
         if session is None:
             session = data.get_session() 
-        result = session.query(models.Results)
+        result = session.query(bases.Results)
         return result
     
     
     def create(self, values):
-        result_ref = models.Results()
+        result_ref = bases.Results()
         result_ref.update(values)
         result_ref.save()
         return result_ref

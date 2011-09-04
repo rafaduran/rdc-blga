@@ -8,8 +8,8 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import data
-import data.base_models as models
+import pyblga.data as data
+import pyblga.data.base_models as bases
 
 
 class ParamsAPI(object):
@@ -24,19 +24,19 @@ class ParamsAPI(object):
     def get(self, param_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.Parameters).filter_by(param_id=param_id).first()
+        result = session.query(bases.Parameters).filter_by(param_id=param_id).first()
         return result
     
     
     def get_all(self, session=None):
         if session is None:
             session = data.get_session() 
-        result = session.query(models.Parameters)
+        result = session.query(bases.Parameters)
         return result
     
     
     def create(self, values):
-        param_ref = models.Parameters()
+        param_ref = bases.Parameters()
         param_ref.update(values)
         param_ref.save()
         return param_ref

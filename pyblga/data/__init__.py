@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-from __future__ import absolute_import
 from __future__ import print_function
 from future_builtins import * #@UnusedWildImport pylint:disable=W0614
 import logging
@@ -8,7 +7,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import joinedload, aliased, sessionmaker
 from sqlalchemy.pool import StaticPool
 
-import data.base_models as bases 
+import base_models as bases
+#from pyblga.data import jsoncol
+#from pyblga.data import models
 
 _ENGINE = None
 _MAKER = None

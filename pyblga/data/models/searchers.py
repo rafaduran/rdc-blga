@@ -9,7 +9,7 @@
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
 import pyblga.data as data
-import pyblga.data.base_models as models
+import pyblga.data.base_models as bases
 
 class SearchersAPI(object):
     """
@@ -19,11 +19,11 @@ class SearchersAPI(object):
         arg...
     """
 
-    @models.with_orm_session
+    @bases.with_orm_session
     def get(self, searcher_id, session=None):
 #        if session is None:
 #            session = data.get_session()
-        result = session.query(models.Runs).filter_by(\
+        result = session.query(bases.Runs).filter_by(\
                 searcher_id=searcher_id).first()
         return result
     
@@ -31,12 +31,12 @@ class SearchersAPI(object):
     def get_all(self, session=None):
         if session is None:
             session = data.get_session() 
-        result = session.query(models.Searchers)
+        result = session.query(bases.Searchers)
         return result
     
     
     def create(self, values):
-        searcher_ref = models.Searchers()
+        searcher_ref = bases.Searchers()
         searcher_ref.update(values)
         searcher_ref.save()
         return searcher_ref

@@ -8,8 +8,8 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import pyblga.data.base_models as models
-import data 
+import pyblga.data.base_models as bases
+import pyblga.data as data
 
 class RunsAPI(object):
     """
@@ -23,36 +23,36 @@ class RunsAPI(object):
     def get(self, run_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.Runs).filter_by(run_id=run_id).first()
+        result = session.query(bases.Runs).filter_by(run_id=run_id).first()
         return result
     
     
     def get_all(self, session=None):
         if session is None:
             session = data.get_session() 
-        result = session.query(models.Runs)
+        result = session.query(bases.Runs)
         return result
     
     
     def get_runs_data(self, run_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.Runs).filter_by(\
-            run_id=run_id).options(data.joinedload(models.RunsParamsAssoc), 
-            data.joinedload(models.Searcher))
+        result = session.query(bases.Runs).filter_by(\
+            run_id=run_id).options(data.joinedload(bases.RunsParamsAssoc), 
+            data.joinedload(bases.Searchers))
         return result
     
     
     def get_result(self, run_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(models.RunsParamsAssoc).filter_by(\
-            run_id=run_id).options(data.joinedload(models.Results))
+        result = session.query(bases.RunsParamsAssoc).filter_by(\
+            run_id=run_id).options(data.joinedload(bases.Results))
         return result
     
     
     def create(self, values):
-        run_ref = models.Runs()
+        run_ref = bases.Runs()
         run_ref.update(values)
         run_ref.save()
         return run_ref
@@ -73,3 +73,10 @@ class RunsAPI(object):
         with session.begin():
             run_ref = self.get(run_id, session)
             session.delete(run_ref)
+            
+            
+    def add_param(self, values):
+        run_param_ref = bases.RunsParamsAssoc()
+        run_param_ref.update(values)
+        run_param_ref.save()
+        return run_param_ref
