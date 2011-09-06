@@ -64,6 +64,7 @@ class TestSearchers(unittest.TestCase):
         self.api.update(searcher)
         updated = self.api.get(4)
         self.assertEqual(updated.tag, 'test_tag')
+        self.api.delete(4)
         
         
 if __name__ == "__main__":
