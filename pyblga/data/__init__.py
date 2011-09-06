@@ -8,8 +8,6 @@ from sqlalchemy.orm import joinedload, aliased, sessionmaker
 from sqlalchemy.pool import StaticPool
 
 import base_models as bases
-#from pyblga.data import jsoncol
-#from pyblga.data import models
 
 _ENGINE = None
 _MAKER = None

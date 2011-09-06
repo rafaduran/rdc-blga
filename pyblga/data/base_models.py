@@ -95,8 +95,7 @@ class RunsParamsAssoc(BlgaBase, Base):
                     primary_key=True)
     param_id = Column(Integer, ForeignKey('params.param_id'), 
                     primary_key=True)
-    run = relationship('Runs')
-    param = relationship('Parameters')
+    param = relationship('Parameters', backref='rp_assoc')
     
     
 class Runs(BlgaBase, Base):
@@ -107,7 +106,8 @@ class Runs(BlgaBase, Base):
     
     searcher = relationship('Searchers')
     result = relationship('Results')
-    rpa = relationship(RunsParamsAssoc, cascade='all')
+    params = relationship('RunsParamsAssoc', backref='run')
+
     
 class Searchers(BlgaBase, Base):
     __tablename__ = 'searchers'
@@ -124,7 +124,6 @@ class Parameters(BlgaBase, Base):
     name = Column(String(25), nullable=False)
     value = Column(Float, nullable=False)
     __table_args__ = (UniqueConstraint("name", "value"), {})
-    rpa = relationship(RunsParamsAssoc, cascade='all')
 
 
 class Results(BlgaBase, Base):
