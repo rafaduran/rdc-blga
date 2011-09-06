@@ -83,8 +83,9 @@ def with_orm_session(func):
             kwargs['session'] is None:
             from pyblga.data import get_session
             kwargs['session'] = get_session()
-        with kwargs['sesion'].begin():
-            return func(*args, **kwargs)
+            with kwargs['session'].begin():
+                return func(*args, **kwargs)
+        return func(*args, **kwargs)
     return inner
 
 

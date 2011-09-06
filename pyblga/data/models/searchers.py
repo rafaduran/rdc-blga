@@ -23,7 +23,7 @@ class SearchersAPI(object):
     def get(self, searcher_id, session=None):
 #        if session is None:
 #            session = data.get_session()
-        result = session.query(bases.Runs).filter_by(\
+        result = session.query(bases.Searchers).filter_by(\
                 searcher_id=searcher_id).first()
         return result
     
@@ -31,9 +31,13 @@ class SearchersAPI(object):
     def get_all(self, session=None):
         if session is None:
             session = data.get_session() 
-        result = session.query(bases.Searchers)
+        result = session.query(bases.Searchers).all()
         return result
     
+    @bases.with_orm_session
+    def get_by_name(self, name, session=None):
+        result = session.query(bases.Searchers).filter_by(name=name).all()
+        return result
     
     def create(self, values):
         searcher_ref = bases.Searchers()
@@ -46,7 +50,7 @@ class SearchersAPI(object):
         if session is None:
             session = data.get_session()
         with session.begin():
-            searcher_ref = self.get(id, session)
+            searcher_ref = self.get(values.searcher_id, session=session)
             searcher_ref.update(values)
             searcher_ref.save(session=session)
             
@@ -55,5 +59,5 @@ class SearchersAPI(object):
         if not session:
             session = data.get_session()
         with session.begin():
-            searcher_ref = self.get(searcher_id, session)
+            searcher_ref = self.get(searcher_id, session=session)
             session.delete(searcher_ref)
