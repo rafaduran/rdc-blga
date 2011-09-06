@@ -38,16 +38,15 @@ class RunsAPI(object):
         if session is None:
             session = data.get_session()
         result = session.query(bases.Runs).filter_by(\
-            run_id=run_id).options(data.joinedload(bases.RunsParamsAssoc), 
-            data.joinedload(bases.Searchers))
+            run_id=run_id).options(data.joinedload(bases.Runs.params),
+                                   data.joinedload(bases.Runs.searcher)).first()
         return result
-    
     
     def get_result(self, run_id, session=None):
         if session is None:
             session = data.get_session()
-        result = session.query(bases.RunsParamsAssoc).filter_by(\
-            run_id=run_id).options(data.joinedload(bases.Results))
+        result = session.query(bases.Runs).options(data.joinedload(
+                bases.Runs.result)).filter_by(run_id=run_id)
         return result
     
     
