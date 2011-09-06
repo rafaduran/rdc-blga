@@ -10,7 +10,10 @@ Taken `from <http://www.sqlalchemy.org/trac/wiki/UsageRecipes/JSONColumn>`_ and
 changed to fit my needs.
 """
 import copy
-import json
+try: 
+    import simplejson as json
+except ImportError: 
+    import json
 
 from sqlalchemy import types
 
