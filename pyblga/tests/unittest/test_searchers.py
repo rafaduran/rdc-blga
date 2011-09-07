@@ -13,6 +13,7 @@ Long description
 """
 import unittest2 as unittest
 import pyblga.data.models.searchers as searchers
+import pyblga.common.exception as error
 
 class TestSearchers(unittest.TestCase):
     """
@@ -32,6 +33,11 @@ class TestSearchers(unittest.TestCase):
         searcher = self.api.get(1)
         self.assertEqual(searcher.searcher_id, 1)
         self.assertEqual(searcher.name, 'Blga')
+        
+    
+    def test_get_fail(self):
+        searcher = self.api.get(9999)
+        self.assertEqual(searcher, None)
 
         
     def test_get_all(self):
@@ -49,6 +55,11 @@ class TestSearchers(unittest.TestCase):
         self.assertEqual(len(searchers), 2)
         
         
+    def test_get_by_name_fail(self):
+        searcher = self.api.get_by_name('NonExists')
+        self.assertEqual(searcher, [])
+        
+        
     def test_create_delete(self):
         searcher = self.api.create({'name': 'test_name', 'tag':'test_tag'})
         self.assertEqual(searcher.name, 'test_name')
@@ -58,6 +69,27 @@ class TestSearchers(unittest.TestCase):
         self.assertEqual(searcher.tag, searcher_again.tag)
         self.api.delete(4)
         
+        
+    def test_create_fail(self):
+        searcher = self.api.get(1)
+        searcher.tag = 'fail'
+        self.api.update(searcher)
+        try:
+            _ = self.api.create({'name':'Blga', 'tag': 'fail'})
+        except error.ModelsAPIError:
+            pass
+        else:
+            self.fail("No exception launched after trying insert")
+            
+    def test_delete_fail(self):
+        try:
+            self.api.delete(9999)
+        except error.ModelsAPIError:
+            pass
+        else:
+            self.fail("No exception launched after trying deletion")
+        
+        
     def test_update(self):
         searcher = self.api.create({'name': 'test_name'})
         searcher.tag = 'test_tag'
@@ -65,6 +97,17 @@ class TestSearchers(unittest.TestCase):
         updated = self.api.get(4)
         self.assertEqual(updated.tag, 'test_tag')
         self.api.delete(4)
+        
+        
+    def test_update_fail(self):
+        searcher = self.api.get(2)
+        searcher.tag = 'fail'
+        try:
+            self.api.update(searcher)
+        except error.ModelsAPIError:
+            pass
+        else:
+            self.fail("No exception launched after trying update")
         
         
 if __name__ == "__main__":
