@@ -17,6 +17,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, object_mapper
 
+import pyblga.common.exception as error
 
 from jsoncol import JSONCol 
 
@@ -27,6 +28,7 @@ class BlgaBase(object):
     """Base class for Keystone Models."""
     __api__ = None
     _i = None
+    
 
     def save(self, session=None):
         """Save this object."""
@@ -35,10 +37,7 @@ class BlgaBase(object):
             from pyblga.data import get_session
             session = get_session()
         session.add(self)
-        try:
-            session.flush()
-        except IntegrityError:
-            raise
+        session.flush()
 
     def delete(self, session=None):
         """Delete this object."""
@@ -77,7 +76,9 @@ class BlgaBase(object):
         return local.iteritems()
 
 
+
 def with_orm_session(func):
+    @error.data_error_wrapper
     def inner(*args, **kwargs):
         if 'session' not in kwargs or \
             kwargs['session'] is None:
