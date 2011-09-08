@@ -84,9 +84,20 @@ def with_orm_session(func):
             kwargs['session'] is None:
             from pyblga.data import get_session
             kwargs['session'] = get_session()
-            with kwargs['session'].begin():
-                return func(*args, **kwargs)
         return func(*args, **kwargs)
+    return inner
+
+
+def with_transaction(func):
+    @error.data_error_wrapper
+    def inner(*args, **kwargs):
+            if 'session' not in kwargs or \
+                kwargs['session'] is None:
+                from pyblga.data import get_session
+                kwargs['session'] = get_session()
+                with kwargs['session'].begin():
+                    return func(*args, **kwargs)
+            return func(*args, **kwargs)              
     return inner
 
 

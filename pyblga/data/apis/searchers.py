@@ -34,22 +34,22 @@ class SearchersAPI(object):
         return result
     
     
-    @error.data_error_wrapper
-    def create(self, values):
+    @bases.with_orm_session
+    def create(self, values, session=None):
         searcher_ref = bases.Searchers()
         searcher_ref.update(values)
-        searcher_ref.save()
+        searcher_ref.save(session=session)
         return searcher_ref
     
     
-    @bases.with_orm_session
+    @bases.with_transaction
     def update(self, values, session=None):
         searcher_ref = self.get(values.searcher_id, session=session)
         searcher_ref.update(values)
         searcher_ref.save(session=session)
 
             
-    @bases.with_orm_session
+    @bases.with_transaction
     def delete(self, searcher_id, session=None):
         searcher_ref = self.get(searcher_id, session=session)
         session.delete(searcher_ref)

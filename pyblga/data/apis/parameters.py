@@ -25,28 +25,30 @@ class ParamsAPI(object):
         result = session.query(bases.Parameters).filter_by(param_id=param_id).\
             first()
         return result
+
     
     @bases.with_orm_session
     def get_all(self, session=None):
         result = session.query(bases.Parameters).all()
         return result
     
-    @error.data_error_wrapper
-    def create(self, values):
+    @bases.with_orm_session
+    def create(self, values, session=None):
         param_ref = bases.Parameters()
         param_ref.update(values)
-        param_ref.save()
+        param_ref.save(session=session)
         return param_ref
     
     
-    @bases.with_orm_session
+    @bases.with_transaction
     def update(self, values, session=None):
         param_ref = self.get(values.param_id, session=session)
         param_ref.update(values)
         param_ref.save(session=session)
             
     
-    @bases.with_orm_session
+    @bases.with_transaction
     def delete(self, param_id, session=None):
         param_ref = self.get(param_id, session=session)
         session.delete(param_ref)
+        return 'algo'
