@@ -8,8 +8,8 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import pyblga.data as data
 import pyblga.data.base_models as bases
+import pyblga.common.exception as error
 
 
 class ParamsAPI(object):
@@ -20,21 +20,18 @@ class ParamsAPI(object):
         arg...
     """
 
-
+    @bases.with_orm_session
     def get(self, param_id, session=None):
-        if session is None:
-            session = data.get_session()
-        result = session.query(bases.Parameters).filter_by(param_id=param_id).first()
+        result = session.query(bases.Parameters).filter_by(param_id=param_id).\
+            first()
         return result
     
-    
+    @bases.with_orm_session
     def get_all(self, session=None):
-        if session is None:
-            session = data.get_session() 
-        result = session.query(bases.Parameters)
+        result = session.query(bases.Parameters).all()
         return result
     
-    
+    @error.data_error_wrapper
     def create(self, values):
         param_ref = bases.Parameters()
         param_ref.update(values)
@@ -42,18 +39,14 @@ class ParamsAPI(object):
         return param_ref
     
     
+    @bases.with_orm_session
     def update(self, values, session=None):
-        if session is None:
-            session = data.get_session()
-        with session.begin():
-            param_ref = self.get(id, session)
-            param_ref.update(values)
-            param_ref.save(session=session)
+        param_ref = self.get(values.param_id, session=session)
+        param_ref.update(values)
+        param_ref.save(session=session)
             
     
+    @bases.with_orm_session
     def delete(self, param_id, session=None):
-        if not session:
-            session = data.get_session()
-        with session.begin():
-            param_ref = self.get(param_id, session)
-            session.delete(param_ref)
+        param_ref = self.get(param_id, session=session)
+        session.delete(param_ref)
