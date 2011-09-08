@@ -2,20 +2,21 @@
 # -*- Encoding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 """
-:py:mod:`~pyblga.tests.unittest.test_searchers` --- Very short description
-======================================
-Long description
+:py:mod:`~pyblga.tests.unittest.test_searchers_api` --- Searchers API tests
+===========================================================================
+This module performs tests for 
+:py:class:`~pyblga.data.apis.searchers.SearchersAPI`
 
-.. module:: pyblga.tests.unittest.test_searchers
-    :synopsis: Short description
+.. module:: pyblga.tests.unittest.test_searchers_api
+    :synopsis: Searchers API tests
 
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
 import unittest2 as unittest
-import pyblga.data.models.searchers as searchers
+import pyblga.data.apis.searchers as searchers
 import pyblga.common.exception as error
 
-class TestSearchers(unittest.TestCase):
+class TestSearchersAPI(unittest.TestCase):
     """
     Tests for :py:class:`pyblga.data.models.runs.RunsAPI()`
     """
