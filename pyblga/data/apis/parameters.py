@@ -32,7 +32,8 @@ class ParamsAPI(object):
         result = session.query(bases.Parameters).all()
         return result
     
-    @bases.with_orm_session
+    
+    @bases.with_transaction
     def create(self, values, session=None):
         param_ref = bases.Parameters()
         param_ref.update(values)

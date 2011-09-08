@@ -33,8 +33,8 @@ class SearchersAPI(object):
         result = session.query(bases.Searchers).filter_by(name=name).all()
         return result
     
-    
-    @bases.with_orm_session
+
+    @bases.with_transaction
     def create(self, values, session=None):
         searcher_ref = bases.Searchers()
         searcher_ref.update(values)
