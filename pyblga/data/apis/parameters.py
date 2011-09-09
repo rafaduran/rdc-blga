@@ -9,7 +9,6 @@
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
 import pyblga.data.base_models as bases
-import pyblga.common.exception as error
 
 
 class ParamsAPI(object):
