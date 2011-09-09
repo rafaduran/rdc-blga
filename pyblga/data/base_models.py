@@ -116,10 +116,11 @@ class Runs(BlgaBase, Base):
     run_id = Column(Integer, primary_key=True, autoincrement=True)
     searcher_id = Column(Integer, ForeignKey('searchers.searcher_id'))
     result_id = Column(Integer, ForeignKey('results.result_id'))
-    
+    __table_args__ = (UniqueConstraint('searcher_id'), 
+                      UniqueConstraint('result_id'), {})
     searcher = relationship('Searchers')
     result = relationship('Results')
-    params = relationship('RunsParamsAssoc', backref='run')
+    params = relationship('RunsParamsAssoc', backref='run', cascade='all')
 
     
 class Searchers(BlgaBase, Base):
@@ -127,8 +128,8 @@ class Searchers(BlgaBase, Base):
     searcher_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(25), nullable=False)
     tag = Column(String(50))
-    __table_args__ = (UniqueConstraint("name", "tag"), {})
-    runs = relationship(Runs, backref='searchers', cascade="all")
+    __table_args__ = (UniqueConstraint('name', 'tag'), {})
+    runs = relationship(Runs, backref='searchers', cascade='all')
     
 
 class Parameters(BlgaBase, Base):
@@ -136,11 +137,11 @@ class Parameters(BlgaBase, Base):
     param_id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(25), nullable=False)
     value = Column(Float, nullable=False)
-    __table_args__ = (UniqueConstraint("name", "value"), {})
+    __table_args__ = (UniqueConstraint('name', 'value'), {})
 
 
 class Results(BlgaBase, Base):
     __tablename__ = 'results'
     result_id = Column(Integer, primary_key=True, autoincrement=True)
     data = Column(JSONCol, nullable=False)
-    run = relationship(Runs, backref='results', cascade="all")
+    run = relationship(Runs, backref='results', cascade='all')
