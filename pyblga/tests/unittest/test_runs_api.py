@@ -81,8 +81,6 @@ class TestRunsAPI(unittest.TestCase):
         self.assertEqual(run.result_id, nre.result_id)
         _ = self.api.get(run.run_id)
         self.api.delete(run.run_id)
-        searcher.delete(nse.searcher_id)
-        result.delete(nre.result_id)
         
         
     def test_create_fail_wrong_searcher_result(self):
@@ -122,9 +120,7 @@ class TestRunsAPI(unittest.TestCase):
                 found = True
         self.assert_(found, "Not found added param")
         self.api.delete(run.run_id)
-        param_api.delete(param.param_id)
-        searcher.delete(nse.searcher_id)
-        result.delete(nre.result_id)            
+        param_api.delete(param.param_id)           
     
     
     def test_add_param_fail(self):
@@ -141,8 +137,6 @@ class TestRunsAPI(unittest.TestCase):
         else:
             self.fail("No exception after adding parameter")
         self.api.delete(run.run_id)
-        searcher.delete(nse.searcher_id)
-        result.delete(nre.result_id)
     
                 
     def test_delete_fail(self):
@@ -162,15 +156,12 @@ class TestRunsAPI(unittest.TestCase):
         nre = result.create({'data': {'2': '0.33'}})
         run = self.api.create({'searcher_id': nse.searcher_id ,
                                'result_id': nre.result_id})
-        run = self.api.create({'data': {'1': '0'}})
         run.searcher_id = nse2.searcher_id
         self.api.update(run)
         run_again = self.api.get(run.run_id)
         self.assertEqual(run_again.searcher_id, nse2.searcher_id)
         self.api.delete(run.run_id)
         searcher.delete(nse.searcher_id)
-        searcher.delete(nse2.searcher_id)
-        result.delete(nre.result_id)
         
     
     def test_update_fail_missing(self):
@@ -180,7 +171,6 @@ class TestRunsAPI(unittest.TestCase):
         nre = result.create({'data': {'2': '0.33'}})
         run = self.api.create({'searcher_id': nse.searcher_id ,
                                'result_id': nre.result_id})
-        run = self.api.create({'data': {'1': '0'}})
         run.searcher_id = 9999
         try:
             self.api.update(run)
@@ -189,8 +179,6 @@ class TestRunsAPI(unittest.TestCase):
         else:
             self.fail("No exception after trying update")
         self.api.delete(run.run_id)
-        searcher.delete(nse.searcher_id)
-        result.delete(nre.result_id)
         
         
     def test_update_fail_exists(self):
@@ -200,7 +188,6 @@ class TestRunsAPI(unittest.TestCase):
         nre = result.create({'data': {'2': '0.33'}})
         run = self.api.create({'searcher_id': nse.searcher_id ,
                                'result_id': nre.result_id})
-        run = self.api.create({'data': {'1': '0'}})
         run.searcher_id = 1
         try:
             self.api.update(run)
@@ -209,8 +196,6 @@ class TestRunsAPI(unittest.TestCase):
         else:
             self.fail("No exception after trying update")
         self.api.delete(run.run_id)
-        searcher.delete(nse.searcher_id)
-        result.delete(nre.result_id)
         
         
 if __name__ == "__main__":
