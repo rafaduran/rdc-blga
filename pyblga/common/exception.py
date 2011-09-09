@@ -11,14 +11,21 @@ Long description
     
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+import functools
 import sqlalchemy.exc as exc
 import pyblga.common.rdc_utils as utils
 
 
-def raiser(error, msg=None):
+def raiser(cls, error, msg=None):
     if msg:
-        raise ModelsAPIError(msg)
-    raise ModelsAPIError(error.message)
+        raise cls(msg)
+    raise cls(error.message)
+
+
+class ModelsError(Exception):
+    def __init__(self, msg=None):
+        msg="Model: Error on models: {0}".format(msg)
+        super(ModelsError, self).__init__(msg)
 
 
 class ModelsAPIError(exc.SQLAlchemyError):
@@ -26,6 +33,8 @@ class ModelsAPIError(exc.SQLAlchemyError):
         msg="Data: Error on data models API: {0}".format(msg)
         super(ModelsAPIError, self).__init__(msg)
 
+models_raiser = functools.partial(raiser, ModelsError)
+api_raiser = functools.partial(raiser, ModelsAPIError)
 
 # Error parser decorators
 parsing_error_wrapper = utils.error_wrapper(
@@ -34,5 +43,8 @@ parsing_error_wrapper = utils.error_wrapper(
     error_func=lambda x,y: (False, ':'.join((y, x.message)))
     )
 
+model_error_wrapper = utils.error_wrapper(errors=ModelsAPIError,
+        msg=None, error_func=models_raiser)
+
 data_error_wrapper = utils.error_wrapper(errors=exc.SQLAlchemyError,
-        msg=None, error_func=raiser)
+        msg=None, error_func=api_raiser)
