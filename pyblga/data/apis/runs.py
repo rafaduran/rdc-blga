@@ -19,63 +19,57 @@ class RunsAPI(object):
         arg...
     """
     
-    
+    @bases.with_orm_session
     def get(self, run_id, session=None):
-        if session is None:
-            session = data.get_session()
         result = session.query(bases.Runs).filter_by(run_id=run_id).first()
         return result
     
     
+    @bases.with_orm_session
     def get_all(self, session=None):
-        if session is None:
-            session = data.get_session() 
-        result = session.query(bases.Runs)
+        result = session.query(bases.Runs).all()
         return result
     
     
+    @bases.with_orm_session
     def get_runs_data(self, run_id, session=None):
-        if session is None:
-            session = data.get_session()
         result = session.query(bases.Runs).filter_by(\
             run_id=run_id).options(data.joinedload(bases.Runs.params),
                                    data.joinedload(bases.Runs.searcher)).first()
         return result
     
+    
+    @bases.with_orm_session
     def get_result(self, run_id, session=None):
-        if session is None:
-            session = data.get_session()
-        result = session.query(bases.Runs).options(data.joinedload(
-                bases.Runs.result)).filter_by(run_id=run_id)
+        result = session.query(bases.Runs).filter_by(run_id=run_id).options(\
+                data.joinedload(bases.Runs.result)).first()
         return result
     
     
-    def create(self, values):
+    @bases.with_transaction
+    def create(self, values, session=None):
         run_ref = bases.Runs()
         run_ref.update(values)
-        run_ref.save()
+        run_ref.save(session=session)
         return run_ref
     
     
+    @bases.with_transaction
     def update(self, values, session=None):
-        if session is None:
-            session = data.get_session()
-        with session.begin():
-            run_ref = self.get(id, session)
-            run_ref.update(values)
-            run_ref.save(session=session)
+        run_ref = self.get(values.run_id, session=session)
+        run_ref.update(values)
+        run_ref.save(session=session)
             
     
+    @bases.with_transaction
     def delete(self, run_id, session=None):
-        if not session:
-            session = data.get_session()
-        with session.begin():
-            run_ref = self.get(run_id, session)
-            session.delete(run_ref)
+        run_ref = self.get(run_id, session=session)
+        session.delete(run_ref)
             
-            
-    def add_param(self, values):
+    
+    @bases.with_transaction        
+    def add_param(self, values, session=None):
         run_param_ref = bases.RunsParamsAssoc()
         run_param_ref.update(values)
-        run_param_ref.save()
+        run_param_ref.save(session=session)
         return run_param_ref
