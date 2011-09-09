@@ -28,7 +28,7 @@ OPTIONS = {'debug': True,
                       'Searchers'] 
            }
 
-def configure_backend(options=OPTIONS):
+def configure_data(options=OPTIONS):
     """
     Establish the database, create an engine if needed, and
     register the models.
@@ -90,4 +90,4 @@ def unregister_models():
     assert _ENGINE
     BASE.metadata.drop_all(_ENGINE)
     
-configure_backend()
+configure_data()

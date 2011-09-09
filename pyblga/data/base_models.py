@@ -13,7 +13,6 @@ Long description
 """
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, \
     UniqueConstraint
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, object_mapper
 
@@ -114,12 +113,13 @@ class RunsParamsAssoc(BlgaBase, Base):
 class Runs(BlgaBase, Base):
     __tablename__ = 'runs'
     run_id = Column(Integer, primary_key=True, autoincrement=True)
-    searcher_id = Column(Integer, ForeignKey('searchers.searcher_id'))
-    result_id = Column(Integer, ForeignKey('results.result_id'))
+    searcher_id = Column(Integer, ForeignKey('searchers.searcher_id'),
+                         nullable=False)
+    result_id = Column(Integer, ForeignKey('results.result_id'), nullable=False)
     __table_args__ = (UniqueConstraint('searcher_id'), 
                       UniqueConstraint('result_id'), {})
-    searcher = relationship('Searchers')
-    result = relationship('Results')
+    searcher = relationship('Searchers', cascade='all')
+    result = relationship('Results', cascade='all')
     params = relationship('RunsParamsAssoc', backref='run', cascade='all')
 
     
