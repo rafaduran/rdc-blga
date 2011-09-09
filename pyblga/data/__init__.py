@@ -4,8 +4,14 @@ from future_builtins import * #@UnusedWildImport pylint:disable=W0614
 import logging
 
 from sqlalchemy import create_engine
+from sqlalchemy import events
 from sqlalchemy.orm import joinedload, aliased, sessionmaker
 from sqlalchemy.pool import StaticPool
+
+
+def on_checkout(dbapi_con, connection_rec, connection_proxy):
+    db_cursor = dbapi_con.execute('pragma foreign_keys=ON')
+
 
 import base_models as bases
 
@@ -32,11 +38,15 @@ def configure_backend(options=OPTIONS):
     """
     global _ENGINE
     if not _ENGINE:
+        
         debug = options['debug']
         verbose = options['verbose']
         timeout = options['timeout']
 
         _ENGINE = create_engine(options['sql_connection'], pool_recycle=timeout)
+        
+        if options['sql_connection'].startswith('sqlite'): 
+            events.event.listen(_ENGINE, 'checkout', on_checkout)
 
         logger = logging.getLogger('sqlalchemy.engine')
         if debug:
