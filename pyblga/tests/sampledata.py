@@ -18,9 +18,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..',
 import pyblga.data.apis as apis
 
 def load_data():
-    for result in ({'0': '0.99'}, {'1': '0.5'}, {'2': '0.33'}):
+    for data in ({'0': '0.99'}, {'1': '0.5'}, {'2': '0.33'}):
         result_model = apis.results.ResultsAPI()
-        result_model.create({'result': result})
+        result_model.create({'data': data})
         
     for name in ('Blga', 'Blga', 'ClusteredClearing'):
         searcher_model = apis.searchers.SearchersAPI()

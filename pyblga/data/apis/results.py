@@ -8,7 +8,6 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
-import pyblga.data as data
 import pyblga.data.base_models as bases
 
 class ResultsAPI(object):
@@ -20,39 +19,42 @@ class ResultsAPI(object):
     """
 
     
+    @bases.with_orm_session    
     def get(self, result_id, session=None):
-        if session is None:
-            session = data.get_session()
-        result = session.query(bases.Results).filter_by(result_id=result_id).first()
+        result = session.query(bases.Results).filter_by(result_id=result_id).\
+            first()
         return result
     
     
-    def get_all(self, session=None):
-        if session is None:
-            session = data.get_session() 
-        result = session.query(bases.Results)
+    @bases.with_orm_session
+    def get_all(self, session=None): 
+        result = session.query(bases.Results).all()
         return result
     
     
-    def create(self, values):
+    @bases.with_orm_session
+    def get_data(self, result_id, session=None):
+        result = session.query(bases.Results.data).filter_by(\
+                result_id=result_id).first()
+        return result
+    
+    
+    @bases.with_transaction
+    def create(self, values, session=None):
         result_ref = bases.Results()
         result_ref.update(values)
-        result_ref.save()
+        result_ref.save(session=session)
         return result_ref
     
     
+    @bases.with_transaction
     def update(self, values, session=None):
-        if session is None:
-            session = data.get_session()
-        with session.begin():
-            result_ref = self.get(id, session)
-            result_ref.update(values)
-            result_ref.save(session=session)
+        result_ref = self.get(values.result_id, session=session)
+        result_ref.update(values)
+        result_ref.save(session=session)
             
     
+    @bases.with_transaction    
     def delete(self, result_id, session=None):
-        if not session:
-            session = data.get_session()
-        with session.begin():
-            result_ref = self.get(result_id, session)
-            session.delete(result_ref)
+        result_ref = self.get(result_id, session=session)
+        session.delete(result_ref)

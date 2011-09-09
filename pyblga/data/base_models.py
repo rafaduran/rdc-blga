@@ -142,5 +142,5 @@ class Parameters(BlgaBase, Base):
 class Results(BlgaBase, Base):
     __tablename__ = 'results'
     result_id = Column(Integer, primary_key=True, autoincrement=True)
-    result = Column(JSONCol, nullable=False)
+    data = Column(JSONCol, nullable=False)
     run = relationship(Runs, backref='results', cascade="all")
