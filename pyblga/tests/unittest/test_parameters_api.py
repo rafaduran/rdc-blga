@@ -11,6 +11,11 @@ Long description
 
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """ 
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..',
+                                             '..', '..','..')))
+
 import unittest2 as unittest
 import pyblga.data.apis.parameters as parameters
 import pyblga.common.exception as error
@@ -46,6 +51,11 @@ class TestParametersAPI(unittest.TestCase):
         
         for index, parameter in enumerate(parameters):
             self.assertEqual(index+1, parameter.param_id)
+    
+            
+    def test_get_names(self):
+        names = self.api.get_names()
+        self.assertListEqual(names, [('pamnass',), ('popSize',)])
         
         
     def test_create_delete(self):
@@ -66,6 +76,7 @@ class TestParametersAPI(unittest.TestCase):
         else:
             self.fail("No exception launched after trying insert")
             
+            
     def test_delete_fail(self):
         try:
             self.api.delete(9999)
@@ -85,7 +96,7 @@ class TestParametersAPI(unittest.TestCase):
         
         
     def test_update_fail(self):
-        parameter = self.api.get(2)
+        parameter = self.api.get(3)
         parameter.value = 500
         try:
             self.api.update(parameter)

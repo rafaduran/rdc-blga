@@ -32,6 +32,12 @@ class ParamsAPI(object):
         return result
     
     
+    @bases.with_orm_session
+    def get_names(self, session=None):
+        result = session.query(bases.Parameters.name).distinct().all()
+        return result
+    
+    
     @bases.with_transaction
     def create(self, values, session=None):
         param_ref = bases.Parameters()
