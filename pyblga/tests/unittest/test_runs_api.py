@@ -39,7 +39,7 @@ class TestRunsAPI(unittest.TestCase):
     def test_get(self):
         run = self.api.get(1)
         self.assertEqual(run.searcher_id, 1)
-        self.assertEqual(run.searcher_id, 1)
+        self.assertEqual(run.result_id, 1)
         
     
     def test_get_fail(self):
@@ -52,9 +52,9 @@ class TestRunsAPI(unittest.TestCase):
         self.assertEqual(run.searcher_id, 3)
         self.assertEqual(run.searcher_id, 3)
         self.assertEqual(run.searcher.name, 'ClusteredClearing')
-        self.assertEqual(len(run.params), 3)
-        for index, assoc in enumerate(run.params):
-            self.assertEqual(index+1, assoc.param_id)
+        self.assertEqual(len(run.params), 2)
+        for index, assoc in enumerate(run.params, 2):
+            self.assertEqual(index, assoc.param_id)
             
             
     def test_get_result(self):
@@ -68,6 +68,17 @@ class TestRunsAPI(unittest.TestCase):
         
         for index, run in enumerate(runs):
             self.assertEqual(index+1, run.run_id)
+            
+            
+    def test_get_param_by_name(self):
+        assoc = self.api.get_param_by_name(1, 'popSize')
+        self.assertEqual(assoc.param.name, 'popSize')
+        self.assertEqual(assoc.param.value, 500)
+        
+        
+    def test_get_param_by_name_non_exists(self):
+        param = self.api.get_param_by_name(1, 'non_exists')
+        self.assertEqual(param, None)
         
         
     def test_create_delete(self):
@@ -137,6 +148,16 @@ class TestRunsAPI(unittest.TestCase):
         else:
             self.fail("No exception after adding parameter")
         self.api.delete(run.run_id)
+        
+    
+    def test_add_param_fail_already_exists(self):
+        run = self.api.get(1)
+        try:
+            self.api.add_param({'run_id': run.run_id, 'param_id': 3})
+        except error.ModelsAPIError:
+            pass
+        else:
+            self.fail("No exception after adding parameter")
     
                 
     def test_delete_fail(self):

@@ -8,6 +8,7 @@
 
 .. moduleauthor::  "Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+import pyblga.common.exception as error
 import pyblga.data.base_models as bases
 import pyblga.data as data
 
@@ -46,6 +47,15 @@ class RunsAPI(object):
         return result
     
     
+    @bases.with_orm_session
+    def get_param_by_name(self, run_id, param_name, session=None):
+        result = session.query(bases.RunsParamsAssoc).filter_by(\
+                    run_id=run_id).join(bases.Parameters).filter(\
+                    bases.Parameters.name==param_name).options(\
+                    data.joinedload(bases.RunsParamsAssoc.param)).first()
+        return result
+    
+    
     @bases.with_transaction
     def create(self, values, session=None):
         run_ref = bases.Runs()
@@ -69,7 +79,22 @@ class RunsAPI(object):
     
     @bases.with_transaction        
     def add_param(self, values, session=None):
-        run_param_ref = bases.RunsParamsAssoc()
-        run_param_ref.update(values)
-        run_param_ref.save(session=session)
-        return run_param_ref
+        if self.__can_add_param(values['run_id'], values['param_id'], 
+                                session=session):
+            run_param_ref = bases.RunsParamsAssoc()
+            run_param_ref.update(values)
+            run_param_ref.save(session=session)
+            return run_param_ref
+        raise error.ModelsAPIError(\
+                "Runs can't have several values for same parameter")
+
+    
+    @bases.with_transaction
+    def __can_add_param(self, run_id, param_id, session=None):
+        param = session.query(bases.Parameters.name).filter_by(\
+                    param_id=param_id).first()
+        if param:
+            return not self.get_param_by_name(run_id, param.name, 
+                                              session=session)
+        raise error.ModelsAPIError("Parameter doesn't exist")
+            
