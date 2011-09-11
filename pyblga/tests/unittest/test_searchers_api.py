@@ -12,6 +12,11 @@ This module performs tests for
 
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..',
+                                             '..', '..','..')))
+
 import unittest2 as unittest
 import pyblga.data.apis.searchers as searchers
 import pyblga.common.exception as error
@@ -59,16 +64,36 @@ class TestSearchersAPI(unittest.TestCase):
     def test_get_by_name_fail(self):
         searcher = self.api.get_by_name('NonExists')
         self.assertEqual(searcher, [])
+    
         
+    def test_get_name(self):
+        searcher = self.api.get(2)
+        self.assertEqual(searcher.name, 'Blga')
+        
+        
+    def test_get_name_fail(self):
+        searcher = self.api.get(9999)
+        self.assertEqual(searcher, None)
+        
+    
+    def test_get_tag(self):
+        searcher = self.api.get_tag(3)
+        self.assertEqual(searcher.tag, 'tag')
+        
+        
+    def test_get_tag_fail(self):
+        searcher = self.api.get_tag(9999)
+        self.assertEqual(searcher, None)
+    
         
     def test_create_delete(self):
         searcher = self.api.create({'name': 'test_name', 'tag':'test_tag'})
         self.assertEqual(searcher.name, 'test_name')
         self.assertEqual(searcher.tag, 'test_tag')
-        searcher_again = self.api.get(4)
+        searcher_again = self.api.get(searcher.searcher_id)
         self.assertEqual(searcher.name, searcher_again.name)
         self.assertEqual(searcher.tag, searcher_again.tag)
-        self.api.delete(4)
+        self.api.delete(searcher.searcher_id)
         
         
     def test_create_fail(self):
@@ -95,9 +120,9 @@ class TestSearchersAPI(unittest.TestCase):
         searcher = self.api.create({'name': 'test_name'})
         searcher.tag = 'test_tag'
         self.api.update(searcher)
-        updated = self.api.get(4)
+        updated = self.api.get(searcher.searcher_id)
         self.assertEqual(updated.tag, 'test_tag')
-        self.api.delete(4)
+        self.api.delete(searcher.searcher_id)
         
         
     def test_update_fail(self):
