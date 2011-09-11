@@ -13,6 +13,9 @@ Long description
 """
 import sys
 import os
+sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..', 
+                                             '..',)))
+
 import functools
 import platform
 import webbrowser
@@ -23,7 +26,8 @@ sip.setapi('QString', 2) # utf-8
 from PyQt4 import QtCore
 from PyQt4 import QtGui
 
-import static.qrc_resources #@UnusedImport
+import pyblga.static.qrc_resources #@UnusedImport
+import pyblga.gui.models as models
 
 # TODO: add log widget
 # TODO: interface to ask which draws are available
@@ -44,6 +48,10 @@ class BlgaGUI(QtGui.QMainWindow):
         self.status_bar = self.statusBar()
         self.status_bar.setSizeGripEnabled(False)
         self.loadSettings()
+        self.runs_table.setModel(models.RunsTableModel())
+        #self.table_view.setSelectionMode(QTableView.SingleSelection)
+        self.runs_table.setSelectionMode(QtGui.QTableView.SingleSelection)
+        self.runs_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
         self.status_bar.showMessage("Ready", 5000)        
         self.setWindowTitle("Blga GUI")
         self.updateFileMenu()
@@ -111,7 +119,7 @@ class BlgaGUI(QtGui.QMainWindow):
         grid_layout = QtGui.QGridLayout(centralwidget)
         self.splitter = QtGui.QSplitter(centralwidget)
         self.splitter.setOrientation(QtCore.Qt.Horizontal)
-        self.runs_table = QtGui.QTableWidget(self.splitter)
+        self.runs_table = QtGui.QTableView(self.splitter)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, 
                                        QtGui.QSizePolicy.Expanding)
         sizePolicy.setHorizontalStretch(0)
@@ -127,9 +135,9 @@ class BlgaGUI(QtGui.QMainWindow):
         self.label = QtGui.QLabel(layout_widget)
         self.label.setText("No data to show")
         vertical_layout.addWidget(self.label)
-        self.results_table = QtGui.QTableWidget(layout_widget)
-        self.results_table.setColumnCount(0)
-        self.results_table.setRowCount(0)
+        self.results_table = QtGui.QTableView(layout_widget)
+        #self.results_table.setColumnCount(0)
+        #self.results_table.setRowCount(0)
         vertical_layout.addWidget(self.results_table)
         grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(centralwidget)
