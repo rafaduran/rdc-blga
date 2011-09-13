@@ -19,6 +19,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..',
 import functools
 import platform
 import webbrowser
+#import logging
 
 import sip
 sip.setapi('QString', 2) # utf-8
@@ -35,6 +36,8 @@ import pyblga.gui.models as models
 __version__ = '0.1'
 __blga_version__ = '1.1.0'
 
+#logging.basicConfig()
+
 class BlgaGUI(QtGui.QMainWindow):
     """
     Main window for Blga GUI
@@ -48,15 +51,29 @@ class BlgaGUI(QtGui.QMainWindow):
         self.status_bar = self.statusBar()
         self.status_bar.setSizeGripEnabled(False)
         self.loadSettings()
-        self.runs_table.setModel(models.RunsTableModel())
-        #self.table_view.setSelectionMode(QTableView.SingleSelection)
+        self.runs_model = models.RunsTableModel()
+        self.runs_table.setModel(self.runs_model)
+        self.results_model = models.ResultsTableModel()
+        self.results_model.load_result(self.runs_model.get_result_id())
+        self.results_table.setModel(self.results_model)
         self.runs_table.setSelectionMode(QtGui.QTableView.SingleSelection)
         self.runs_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
+        self.results_table.setSelectionMode(QtGui.QTableView.SingleSelection)
+        self.results_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
+        self.connect(self.runs_table.selectionModel(), 
+            QtCore.SIGNAL("currentRowChanged(QModelIndex,QModelIndex)"),
+            lambda x,y:self.update_results_table(x,y))
         self.status_bar.showMessage("Ready", 5000)        
         self.setWindowTitle("Blga GUI")
         self.updateFileMenu()
         
         self.show()
+        
+    
+    @QtCore.pyqtSlot()
+    def update_results_table(self, index, _):
+        self.results_model.load_result(self.runs_model.get_result_id(index))
+        self.results_table.reset()
         
         
     def updateUI(self):
@@ -64,6 +81,7 @@ class BlgaGUI(QtGui.QMainWindow):
         Shows menu
         """
         pass
+    
     
     @QtCore.pyqtSlot()
     def updateFileMenu(self):
