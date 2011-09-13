@@ -74,6 +74,7 @@ class BlgaGUI(QtGui.QMainWindow):
     def update_results_table(self, index, _):
         self.results_model.load_result(self.runs_model.get_result_id(index))
         self.results_table.reset()
+        self.label.setText(self.runs_model.get_run_label_data(index))
         
         
     def updateUI(self):

@@ -75,6 +75,17 @@ class RunsTableModel(core.QAbstractTableModel):
             return self.runs[0].result_id
         return self.runs[index.row()].result_id
     
+    
+    def get_run_label_data(self, index=None):
+        if not index:
+            index = 0
+        else:
+            index = index.row()
+        data = self.ruAPI.get_runs_data(self.runs[index].run_id)
+        return "{0} {1}".format(data.searcher.name,
+                " ".join(["{0}:{1}".format(assoc.param.name, assoc.param.value)\
+                           for assoc in data.params]))
+    
         
     def rowCount(self, index=core.QModelIndex()):
         return len(self.runs)
@@ -86,6 +97,7 @@ class RunsTableModel(core.QAbstractTableModel):
         
     def flags(self, index):
         return super(RunsTableModel,self).flags(index)
+    
     
     @error.model_error_wrapper
     def data(self, index, role=core.Qt.DisplayRole):
