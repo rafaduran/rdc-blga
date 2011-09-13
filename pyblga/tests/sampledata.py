@@ -19,7 +19,10 @@ import pyblga.data.apis as apis
 
 def load_data():
     result_model = apis.results.ResultsAPI()
-    for data in ({'0': '0.99'}, {'1': '0.5'}, {'2': '0.33'}):
+    for data in ({"0":{"1":[{"fitness":1.0,"variable":{"0": 0.9}},{"fitness":0.5,"variable":{"0": 0.7}}]}},
+                {"0":{"1":[{"fitness":0.10,"variable":{"0": 0.6}},{"fitness":0.3,"variable":{"0": 0.07}}]}},
+                {"0":{"1":[{"fitness":0.99999999,"variable":{"0": 0.5}},{"fitness":1,"variable":{"0": 0.33}}]}},
+                 ):
         result_model.create({'data': data})
     
     searcher_model = apis.searchers.SearchersAPI()
