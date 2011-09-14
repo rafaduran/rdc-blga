@@ -78,15 +78,15 @@ template <class T>
 void BlgaJsonRW<T>::write(double* variables, double fitness, bool is_last)
 {        
     this->out_ << "\t{\"fitness\": " << fitness << ", "; // Start 
-    this->out_ << "\"variable\": [";
+    this->out_ << "\"variables\": {";
     for(int j = 0; j < this->nVariables_; j++){
         
-        this->out_ << " {\"" << j << "\": " << variables[j] << "}";
+        this->out_ << "\"" << j << "\": " << variables[j];
         if( j != (this->nVariables_ - 1)){
             this->out_ << "," ;
         }
     }
-    this->out_ << "]";
+    this->out_ << "}";
     // End
     if (!is_last){
         this->out_ << "}," << endl;
