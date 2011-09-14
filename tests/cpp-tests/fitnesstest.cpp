@@ -32,7 +32,8 @@ typedef FitnessFunction* CreateFitnessFunc();
 
 template <int functionNumber>
 FitnessFunction* CreateFitness() {
-  return  FitnessFunction::getFitnessFunction(functionNumber);
+  return  FitnessFunction::getFitnessFunction(functionNumber,
+		  "/home/rdc/projects/rdc-blga/tests/");
 }
 
 
