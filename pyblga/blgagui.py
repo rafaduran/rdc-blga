@@ -29,7 +29,7 @@ from PyQt4 import QtGui
 
 import pyblga.static.qrc_resources #@UnusedImport
 import pyblga.gui.models as models
-
+import pyblga.data.fileinout as data
 # TODO: add log widget
 # TODO: interface to ask which draws are available
 
@@ -125,7 +125,9 @@ class BlgaGUI(QtGui.QMainWindow):
     
     @QtCore.pyqtSlot()
     def import_from_file(self):
-        pass
+        filename = QtGui.QFileDialog.getOpenFileName(parent=self, caption="Import from a file", 
+                                         filter=".json")
+        print data.import_results(filename)
     
     
     @QtCore.pyqtSlot()
