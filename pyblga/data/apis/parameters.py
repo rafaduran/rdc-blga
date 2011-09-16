@@ -38,6 +38,13 @@ class ParamsAPI(object):
         return result
     
     
+    @bases.with_orm_session
+    def get_id(self, name, value, session=None):
+        result = session.query(bases.Parameters.param_id).filter_by(name=name,
+                    value=value).first()
+        return result
+    
+    
     @bases.with_transaction
     def create(self, values, session=None):
         param_ref = bases.Parameters()
@@ -57,4 +64,3 @@ class ParamsAPI(object):
     def delete(self, param_id, session=None):
         param_ref = self.get(param_id, session=session)
         session.delete(param_ref)
-        return 'algo'
