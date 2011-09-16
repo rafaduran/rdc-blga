@@ -54,8 +54,9 @@ class BlgaGUI(QtGui.QMainWindow):
         self.runs_model = models.RunsTableModel()
         self.runs_table.setModel(self.runs_model)
         self.results_model = models.ResultsTableModel()
-        self.results_model.load_result(self.runs_model.get_result_id())
+        #self.results_model.load_result(self.runs_model.get_result_id())
         self.results_table.setModel(self.results_model)
+        self.results_model.reset()
         self.runs_table.setSelectionMode(QtGui.QTableView.SingleSelection)
         self.runs_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
         self.results_table.setSelectionMode(QtGui.QTableView.SingleSelection)
@@ -73,7 +74,7 @@ class BlgaGUI(QtGui.QMainWindow):
     @QtCore.pyqtSlot()
     def update_results_table(self, index, _):
         self.results_model.load_result(self.runs_model.get_result_id(index))
-        self.results_table.reset()
+        self.results_model.reset()
         self.label.setText(self.runs_model.get_run_label_data(index))
         
         
@@ -125,9 +126,11 @@ class BlgaGUI(QtGui.QMainWindow):
     
     @QtCore.pyqtSlot()
     def import_from_file(self):
-        filename = QtGui.QFileDialog.getOpenFileName(parent=self, caption="Import from a file", 
-                                         filter=".json")
-        print data.import_results(filename)
+        filename = QtGui.QFileDialog.getOpenFileName(parent=self, 
+                caption="Import from a file", filter=".json")
+        _ = data.import_results(filename)
+#        self.runs_table.update()
+        self.runs_model.reset()        
     
     
     @QtCore.pyqtSlot()

@@ -58,6 +58,12 @@ class RunsTableModel(core.QAbstractTableModel):
         self.pAPI = parameters.ParamsAPI()
         self.sAPI = searchers.SearchersAPI()
         self.__init_columns()
+        
+        
+    def reset(self):
+        self.runs = self.ruAPI.get_all()
+        self.__init_columns()
+        super(RunsTableModel, self).reset()
     
         
     @error.model_error_wrapper    
@@ -182,7 +188,7 @@ class ResultsTableModel(core.QAbstractTableModel):
     def columnCount(self, index=core.QModelIndex()):
         if not self.data:
             return 0
-        return 1+len(self.data[self.cur_run][self.cur_iter][0]['variable'])
+        return 1+len(self.data[self.cur_run][self.cur_iter][0]['variables'])
 
     
     def flags(self, index):
@@ -202,7 +208,7 @@ class ResultsTableModel(core.QAbstractTableModel):
                 return core.QVariant(\
                     self.data[self.cur_run][self.cur_iter][row]['fitness'])
             return core.QVariant(self.data[self.cur_run][self.cur_iter][row]\
-                                 ['variable'][str(col-1)])
+                                 ['variables'][str(col-1)])
             return core.QVariant()
         elif role == core.Qt.TextAlignmentRole:
             return core.QVariant(int(core.Qt.AlignCenter))
@@ -225,7 +231,9 @@ class ResultsTableModel(core.QAbstractTableModel):
         elif role == core.Qt.DisplayRole and orientation == core.Qt.Horizontal:
             if section == ResultsTableModel.FITNESS:
                 return core.QVariant("Fitness")
-            elif 1 <= section < len(self.data[self.cur_run][self.cur_iter][0]):
+            #elif 1 <= section < len(self.data[self.cur_run][self.cur_iter][0]):
+            elif 1 <= section <= \
+                len(self.data[self.cur_run][self.cur_iter][0]['variables']):
                 return core.QVariant("Variable {0}".format(section-1))
             return core.QVariant()
                 
