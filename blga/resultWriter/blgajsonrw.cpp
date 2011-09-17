@@ -18,6 +18,7 @@
 
 #include <cstring>
 #include <iostream>
+#include <vector>
 
 #include "blgajsonrw.h"
 
@@ -41,6 +42,22 @@ BlgaJsonRW<T>::~BlgaJsonRW()
 {
     this->out_.close();
 }
+
+
+template <class T>
+void BlgaJsonRW<T>::writeParams(vector<Param> params)
+{
+	vector<Param>::iterator it,before_last;
+	this->out_ << "\t\"params\":{";
+	before_last = params.end();
+	before_last--;
+	for(it=params.begin(); it< before_last; it++){
+		this->out_ << "\"" << it->name << "\":" << it->value << ",";
+	}
+	this->out_ << "\"" << it->name << "\":" <<
+			it->value << "}," << endl;
+}
+
 
 template <class T>
 void BlgaJsonRW<T>::startRun(int run){
@@ -70,7 +87,7 @@ void BlgaJsonRW<T>::endIteration(bool is_last=false)
     if(is_last){
         this->out_ << "}";
     } else {
-        this->out_ << "}," << endl;
+        this->out_ << "," << endl;
     }
 }
 

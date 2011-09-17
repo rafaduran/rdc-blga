@@ -35,6 +35,7 @@ public:
     void endIteration(bool is_last);
     void startRun(int run);
     void endRun(bool is_last);
+    void writeParams(std::vector<Param> params);
 };
 
 #endif // BLGAJSONRW_H
