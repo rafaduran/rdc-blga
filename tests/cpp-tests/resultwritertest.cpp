@@ -143,7 +143,8 @@ std::vector<Param> get_params(void)
 	for(int i=0; i < 5; i++){
 		Param p;
 		p.name = "hola";
-		p.value = i;
+		p.ivalue = i;
+		p.is_int = true;
 		params.push_back(p);
 	}
 	return params;
