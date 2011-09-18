@@ -94,6 +94,10 @@ Protected members
   This value represents how frequently is called :cpp:func:`iterate`, being
   called :cpp:func:`fastIterate` all remaining iterations.
 
+.. cpp:member:: bool alfa
+
+    Flag used to know if wether alfa parameter is being used or not. 
+
 .. cpp:member:: ResultWriter<std::ofstream>* rw_
 
   :ref:`ResultWriter` object used for outputting
@@ -156,6 +160,12 @@ Public members
 .. cpp:function:: void writeResults(int iRuns, int nFEs, int functionNumber, bool is_last_run, bool is_last_iteration)
 
   This **virtual** method writes results using an :ref:`ResultWriter` class.
+  
+.. cpp:function:: vector<Param> get_params(void)
+
+    This method is used to request local searchers for the parameters
+    they are using, so they can be used by :ref:`WriteResults` classes. 
+    Overrides :ref:`LocalSearcher` virtual method.
 
 .. cpp:function:: void swap(int* a, int* b)
 
