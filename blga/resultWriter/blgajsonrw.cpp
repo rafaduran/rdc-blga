@@ -30,7 +30,7 @@ BlgaJsonRW<T>::BlgaJsonRW(const char* filename, int nVariables)
     this->nVariables_ = nVariables;
     this->filename_ = filename;
     this->out_.open(filename, std::ios::app);
-    this->out_.setf(ios::scientific,ios::floatfield);
+    //this->out_.setf(ios::scientific,ios::floatfield);
     this->out_.precision(15);
     this->out_ << "{" << endl;
 }
@@ -47,15 +47,19 @@ BlgaJsonRW<T>::~BlgaJsonRW()
 template <class T>
 void BlgaJsonRW<T>::writeParams(vector<Param> params)
 {
+	this->out_.setf(ios::dec,ios::floatfield);
 	vector<Param>::iterator it,before_last;
 	this->out_ << "\t\"params\":{";
 	before_last = params.end();
 	before_last--;
 	for(it=params.begin(); it< before_last; it++){
-		this->out_ << "\"" << it->name << "\":" << it->value << ",";
+		this->out_ << "\"" << it->name << "\":" <<
+				(it->is_int?it->ivalue:it->dvalue) << ",";
 	}
 	this->out_ << "\"" << it->name << "\":" <<
-			it->value << "}," << endl;
+			(it->is_int?it->ivalue:it->dvalue) << "}," << endl;
+	//this->out_.flush();
+	this->out_.setf(ios::scientific,ios::floatfield);
 }
 
 
@@ -87,7 +91,7 @@ void BlgaJsonRW<T>::endIteration(bool is_last=false)
     if(is_last){
         this->out_ << "}";
     } else {
-        this->out_ << "," << endl;
+        this->out_ << "}," << endl;
     }
 }
 

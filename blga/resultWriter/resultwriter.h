@@ -25,7 +25,9 @@
 
 struct Param{
 	const char *name;
-	double value;
+	int ivalue;
+	double dvalue;
+	bool is_int;
 };
 
 template <class T>
