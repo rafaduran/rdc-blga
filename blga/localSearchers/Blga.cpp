@@ -328,20 +328,12 @@ void Blga::iterate( ) {
       mates[ i ] = this->population[ selected ];
    }
   
-   //CRUCE MULTIPADRE UNIFORMEs
+   //CRUCE MULTIPADRE UNIFORME
    this->crossMUX( this->probMUX, this->cl, mates,
                    numMates, this->offspring, this->mask, this->dimension );
   
    //EVALUACION DE OFFSPRING
    double fOffspring = this->ff->fitness( offspring);
-   
-   ofstream fo("offsprings",ios::app);
-   fo.setf(ios::scientific,ios::floatfield);
-   fo.precision(15);
-   char binary[ff->getDim()];
-   ff->inverseGray(offspring,binary);
-   fo << fOffspring << " " << ff->binaryToDouble(binary) << endl;
-   fo.close();
   
    //ACTUALIZACIÓN DE CL
    if ( ff->compare( fOffspring, fCL ) > 0 ) {
