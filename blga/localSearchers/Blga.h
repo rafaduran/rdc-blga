@@ -52,6 +52,7 @@ class Blga : public LocalSearcher{
     bool repulse;    // Valor usado en el cruce
     int itC;         /* Variable que indica la frecuencia con la que se llaman
                         iterate y fastIterate */
+    bool alfa;		// Flag used for reporting purposes
     ResultWriter<ofstream>* rw_;
     
     // Cruce multipadre uniforme
@@ -101,7 +102,9 @@ class Blga : public LocalSearcher{
       
       // Función auxiliar usada para guardar los resultados en un fichero                           
       void writeResults(int iRuns,int nFEs, bool is_last_run,
-                        bool is_last_iteration); 
+                        bool is_last_iteration);
+
+      vector<Param> get_params(void);
       
       void swap(int *a, int *b); // Función auxiliar de quick sort
       

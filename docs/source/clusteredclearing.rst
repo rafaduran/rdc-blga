@@ -46,7 +46,7 @@ Protected members
 
 .. cpp:function bool hasConverged()
 
-  Retunrs True if convergence is reached.
+  Returns True if convergence is reached.
 
 Public members
 --------------
@@ -59,6 +59,16 @@ Public members
 
   **Overloaded** class constructor, it computes probMux based on 
   :cpp:member:`dimension` and **alfa** attribute.
+  
+.. cpp:function:: int improve(char *s, double& fitness, int size,int maxEvaluations, int iRuns, int current_nFEs, int fNumber, const char *name)
+
+  **Virtual** method performing iterations until stop condition or convergence is reached.
+  
+.. cpp:function:: vector<Param> get_params(void)
+
+    This method is used to request local searchers for the parameters
+    they are using, so they can be used by :ref:`WriteResults` classes. 
+    Overrides :ref:`LocalSearcher` virtual method.
       
 Private members
 ---------------

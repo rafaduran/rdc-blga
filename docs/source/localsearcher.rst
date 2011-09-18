@@ -55,4 +55,8 @@ Public members
 .. cpp:function:: void writeResults(int iRuns, int nFEs, int functionNumber, bool is_last_run, bool is_last_iteration)
 
   This **virtual** method writes results using an :ref:`ResultWriter` class.
-
+  
+.. cpp:function:: vector<Param> get_params(void)
+ 
+    This **virtual** method is used to request local searchers for the parameters
+    they are using, so they can be used by :ref:`WriteResults` classes.

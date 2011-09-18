@@ -9,6 +9,14 @@ classes. This virtual class is implemented using three design patterns:
 * Abstract factory [#]_
 * Protected variations (from GRASP patterns [#]_)
 
+Macros
+------
+
+.. c:macro:: struct Param{const char *name;int ivalue;double dvalue;bool is_int;};
+
+  This struct is used by :ref:`LocalSearcher` subclasses when are requested for
+  the parameters they are using, so they can be added to results file.  
+
 Public members
 --------------
 
@@ -31,6 +39,10 @@ Public members
 .. cpp:function:: void endRun(bool is_last = false)
 
     Ends current run, **virtual** method
+    
+.. cpp:function:: void writeParams(vector<Param> params)
+
+    Writes all parameters from given vector.
 
 .. cpp:function:: void setNVariables(int nVar)
 

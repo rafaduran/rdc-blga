@@ -20,8 +20,9 @@
 #ifndef LOCALSEARCHER_H
 #define LOCALSEARCHER_H
 
-#include "../carlosFitnessFunctions/FitnessFunction.h"
-#include "../carlosFitnessFunctions/Random.h"
+#include "FitnessFunction.h"
+#include "Random.h"
+#include "resultwriter.h"
 
 #include <iostream>
 #include <sstream>
@@ -69,6 +70,7 @@ public:
    // Función auxiliar para almacenar los resultados 
    virtual void writeResults(int iRuns,int nFEs, bool is_last_run,
                         bool is_last_iteration){};
+   virtual vector<Param> get_params(void){};
 };
 
 #endif

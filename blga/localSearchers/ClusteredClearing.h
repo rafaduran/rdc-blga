@@ -20,9 +20,10 @@
 #ifndef CLUSTEREDCLEARING_H
 #define CLUSTEREDCLEARING_H
 
-#include <Blga.h>
 #include <vector>
 #include <string.h>
+#include "Blga.h"
+#include "resultwriter.h"
 
 struct Off{
    char *genotype;
@@ -53,6 +54,7 @@ class ClusteredClearing : public Blga {
       virtual int improve(char* s, double& fitness, int size, int
          maxEvaluations, int iRuns, int current_nFEs, int fNumber, const
          char* name);
+      vector<Param> get_params(void);
   
   protected: 
       virtual bool hasConverged();

@@ -25,7 +25,7 @@
 using ::testing::TestWithParam;
 using ::testing::Values;
 
-
+std::vector<Param> get_params(void);
 typedef ResultWriter<std::ofstream>* CreateRWFunc();
 
 template <int rwNumber, int nVariables, class T>
@@ -100,6 +100,7 @@ TEST_P(RWTest, WRITE) {
     for(int i = 0; i < nVar; i++){
         variables[i] = 1.0;
     }
+    rw_->writeParams(get_params());
     rw_->startRun(0);
     rw_->startIteration(0);
     rw_->write(variables, fitness);
@@ -109,7 +110,7 @@ TEST_P(RWTest, WRITE) {
     rw_->write(variables, fitness);
     rw_->write(variables, fitness, true);
     rw_->endIteration(true);
-    rw_->endRun();
+    rw_->endRun(false);
     rw_->startRun(1);
     rw_->startIteration(0);
     rw_->write(variables, fitness);
@@ -134,3 +135,17 @@ INSTANTIATE_TEST_CASE_P(
     BlgaJRW_5,
     RWTest,
     Values(&CreateRW<0, 5, std::ofstream>));
+
+// Auxiliary function
+std::vector<Param> get_params(void)
+{
+	std::vector<Param> params;
+	for(int i=0; i < 5; i++){
+		Param p;
+		p.name = "hola";
+		p.ivalue = i;
+		p.is_int = true;
+		params.push_back(p);
+	}
+	return params;
+}

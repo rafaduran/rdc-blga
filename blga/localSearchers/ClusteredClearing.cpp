@@ -48,9 +48,11 @@ ClusteredClearing::~ClusteredClearing(){
 int ClusteredClearing::improve(char* s, double& fitness, int size, 
     int maxEvaluations, int iRuns, int current_nFEs, int fNumber, const char* 
     name) {
-    if(this->rw_ == NULL)
+    if(this->rw_ == NULL){
         this->rw_ = ResultWriter<ofstream>::getResultWriter(0, name, 
                                                      this->ff->getNvariables());
+        this->rw_->writeParams(this->get_params());
+    }
     this->rw_->startRun(iRuns);
     
     int numEvaluations = 0;
@@ -420,3 +422,46 @@ int ClusteredClearing::searchWorst(int cluster) {
    return indexMin;
 }
 
+vector<Param> ClusteredClearing::get_params()
+{
+	vector<Param> params;
+
+	Param p;
+	p.name = "nOff";
+	p.ivalue = this->itC;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "N";
+	p.ivalue = this->popSize;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "m";
+	p.ivalue = this->numMates;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "pamn";
+	p.ivalue = this->pamNass;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "rtsn";
+	p.ivalue = this->rtsNass;
+	params.push_back(p);
+	p.is_int = true;
+
+	if(this->alfa){
+		p.name = "a";
+		p.ivalue = int(this->probMUX*dimension);
+		p.is_int = true;
+		params.push_back(p);
+	} else {
+		p.name = "pf";
+		p.dvalue = this->probMUX;
+		p.is_int = false;
+		params.push_back(p);
+	}
+	return params;
+}

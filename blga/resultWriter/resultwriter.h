@@ -17,10 +17,18 @@
 */
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "blgajsonrw.h"
 
 #ifndef RESULTWRITER_H
 #define RESULTWRITER_H
+
+struct Param{
+	const char *name;
+	int ivalue;
+	double dvalue;
+	bool is_int;
+};
 
 template <class T>
 class ResultWriter
@@ -35,6 +43,7 @@ public:
     virtual void endIteration(bool is_last = false){};
     virtual void startRun(int run){};
     virtual void endRun(bool is_last = false){};
+    virtual void writeParams(std::vector<Param> params){};
     void setNVariables(int nVar);
     int getNVariables();
     void setFilename(const char *filename);
