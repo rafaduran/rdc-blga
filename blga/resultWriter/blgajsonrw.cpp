@@ -91,7 +91,7 @@ void BlgaJsonRW<T>::endIteration(bool is_last=false)
     if(is_last){
         this->out_ << "}";
     } else {
-        this->out_ << "}," << endl;
+        this->out_ << "," << endl;
     }
 }
 

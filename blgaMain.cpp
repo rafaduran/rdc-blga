@@ -202,8 +202,8 @@ int main(int argc, char *argv[]){
             aux.str().data() <<  " " << difftime(final,comienzo) << endl;
       tm.close();
       
-      ls->writeResults(iRuns, stopStruct.nFEs, true, 
-                       (iRuns==(numRuns-1))?true:false);
+      ls->writeResults(iRuns, stopStruct.nFEs, (iRuns==(numRuns-1))?true:false,
+    		  true);
       
       delete sc;
   }
