@@ -67,6 +67,7 @@ Blga::Blga( int itC, int popSize, int dimension, double probMux, int numMates,
   
    this->fCL = 0;
    this->numProtected = 0;
+   this->alfa = false; 	// Mark it as not used
   
 }
 
@@ -112,6 +113,7 @@ Blga::Blga( int itC, int popSize, int dimension, int alfa, int numMates, int pam
   
    this->fCL = 0;
    this->numProtected = 0;
+   this->alfa = true;	// Mark it as used
 }
 
 Blga::~Blga() {
@@ -376,33 +378,35 @@ void Blga::fastIterate( ) {
    realizadas */
 int Blga::improve(char * s, double & fitness, int size, int maxEvaluations,
                   int iRuns, int current_nFEs, int fNumber, const char *name ) {
-   int numEvaluations = 0;
-   this->cl = s;
-   this->fCL = fitness;
-   this->dimension = size;
-   this->numProtected = 0;
+	int numEvaluations = 0;
+	this->cl = s;
+	this->fCL = fitness;
+	this->dimension = size;
+	this->numProtected = 0;
    
-   if(this->rw_ == NULL)
-      this->rw_ = ResultWriter<ofstream>::getResultWriter(0, name, 
-                                                     this->ff->getNvariables());
+	if(this->rw_ == NULL){
+		this->rw_ = ResultWriter<ofstream>::getResultWriter(0, name,
+				this->ff->getNvariables());
+		this->rw_->writeParams(this->get_params());
+	}
+
    if(current_nFEs==1){
       this->rw_->startRun(iRuns);
    }
    
-  
    for ( int i = 0; i < size; i++ )
-      this->mask[ i ] = 1;
+	   this->mask[ i ] = 1;
    /* La primera vez se llama siempre a iterate, luego se va llamando a iterate
       o fastIterate según itC */
    while ( numEvaluations < maxEvaluations && !this->hasConverged() ) {
-      if((current_nFEs + numEvaluations + 1) == 2)
-         this->iterate();
-      else if((current_nFEs + numEvaluations + 1) % itC)
-         this->fastIterate();
-      else 
-         this->iterate();
+	   if((current_nFEs + numEvaluations + 1) == 2)
+		   this->iterate();
+	   else if((current_nFEs + numEvaluations + 1) % itC)
+		   this->fastIterate();
+	   else
+		   this->iterate();
 
-      numEvaluations++;
+	   numEvaluations++;
     
       /*if((current_nFEs + numEvaluations) % 1000 == 0){
          this->writeResults(iRuns, current_nFEs + numEvaluations, false, false);
@@ -510,4 +514,48 @@ void Blga::quickSort(int arr[], int beg, int end) {
       quickSort(arr, beg, l);
       quickSort(arr, r, end);
    }
+}
+
+vector<Param> Blga::get_params()
+{
+	vector<Param> params;
+
+	Param p;
+	p.name = "itC";
+	p.ivalue = this->itC;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "N";
+	p.ivalue = this->popSize;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "m";
+	p.ivalue = this->numMates;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "pamn";
+	p.ivalue = this->pamNass;
+	p.is_int = true;
+	params.push_back(p);
+
+	p.name = "rtsn";
+	p.ivalue = this->rtsNass;
+	params.push_back(p);
+	p.is_int = true;
+
+	if(this->alfa){
+		p.name = "a";
+		p.ivalue = int(this->probMUX*dimension);
+		p.is_int = true;
+		params.push_back(p);
+	} else {
+		p.name = "pf";
+		p.dvalue = this->probMUX;
+		p.is_int = false;
+		params.push_back(p);
+	}
+	return params;
 }
