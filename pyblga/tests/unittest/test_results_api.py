@@ -36,7 +36,9 @@ class TestResultsAPI(unittest.TestCase):
     def test_get(self):
         result = self.api.get(1)
         self.assertEqual(result.result_id, 1)
-        self.assertDictEqual(result.data, {'0': '0.99'})
+        self.assertDictEqual(result.data, 
+                {u'0': {u'1': [{u'fitness': 1.0, u'variables': {u'0': 0.9}},
+                {u'fitness': 0.5, u'variables': {u'0': 0.7}}]}})
         
     
     def test_get_fail(self):
@@ -46,7 +48,9 @@ class TestResultsAPI(unittest.TestCase):
     
     def test_get_data(self):
         result = self.api.get_data(3)
-        self.assertDictEqual(result.data, {'2': '0.33'})
+        self.assertDictEqual(result.data, 
+            {u'0': {u'1': [{u'fitness': 0.99999999, u'variables': {u'0': 0.5}},
+            {u'fitness': 1, u'variables': {u'0': 0.33}}]}})
 
         
     def test_get_all(self):
