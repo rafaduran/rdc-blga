@@ -33,8 +33,12 @@ import pyblga.common.exception as error
 def import_results(filename):
     with open(filename,'rt') as json_file:
         reAPI = results.ResultsAPI()
-        result = reAPI.create({'data': json.loads(json_file.read())})
-        ls_name, args = parse_args(parse_dir(filename))
+        job = json.loads(json_file.read())
+        args = job['params']
+        del job['params']
+        result = reAPI.create({'data': job})
+        ls_name = args['lsname']
+        del args['lsname']
         param_list = create_parameters(args)
         seAPI = searchers.SearchersAPI()
         searcher = seAPI.create({'name': ls_name})
@@ -59,21 +63,6 @@ def create_parameters(args):
         finally:
             param_list.append(para)
     return param_list
-
-
-def parse_dir(filename):
-    return os.path.abspath(filename).split(os.sep)[-2]
-    
-
-def parse_args(string):
-    tokens = string.split('_')[1:] # Removing 'msls'
-    ls_name = tokens[0]
-    pattern = re.compile(r"\d+\.?\d*")
-    args = {}
-    for arg in tokens[1:]:
-        index = pattern.search(arg).start()
-        args[arg[:index]] = arg[index:]
-    return ls_name, args
 
 
 if __name__ == '__main__':
