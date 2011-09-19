@@ -463,5 +463,7 @@ vector<Param> ClusteredClearing::get_params()
 		p.is_int = false;
 		params.push_back(p);
 	}
+	p.name = "ClusteredClearing";
+	params.push_back(p);
 	return params;
 }

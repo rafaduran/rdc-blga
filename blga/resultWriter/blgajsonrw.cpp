@@ -56,9 +56,7 @@ void BlgaJsonRW<T>::writeParams(vector<Param> params)
 		this->out_ << "\"" << it->name << "\":" <<
 				(it->is_int?it->ivalue:it->dvalue) << ",";
 	}
-	this->out_ << "\"" << it->name << "\":" <<
-			(it->is_int?it->ivalue:it->dvalue) << "}," << endl;
-	//this->out_.flush();
+	this->out_ << "\"lsname\":" << "\"" << it->name << "\"" << "}," << endl;
 	this->out_.setf(ios::scientific,ios::floatfield);
 }
 

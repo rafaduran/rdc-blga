@@ -557,5 +557,7 @@ vector<Param> Blga::get_params()
 		p.is_int = false;
 		params.push_back(p);
 	}
+	p.name = "Blga";
+	params.push_back(p);
 	return params;
 }
