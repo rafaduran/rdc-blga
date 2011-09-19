@@ -1,2 +1,6 @@
 # needed to autodiscovering tests 
 unittest2
+# I'm using last version, since some features I'm using come to 0.7.x versions
+sqlalchemy>=0.7.0
+# SQLite
+pysqlite
