@@ -99,8 +99,8 @@ class BlgaGUI(QtGui.QMainWindow):
     
     @QtCore.pyqtSlot(int)
     def showHelp(self):
-        help_file = "static/html/help.html"
-        helppath = os.path.join(os.path.dirname(__file__), help_file)
+        helppath = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                            "static/html/help.html"))
         webbrowser.open_new("file://{0}".format(helppath))
     
     
