@@ -27,9 +27,9 @@ import pyblga.data.apis.searchers as searchers
 import pyblga.data.apis.parameters as params
 import pyblga.data.apis.runs as runs
 import pyblga.common.exception as error
-#import pyblga.data
 
-    
+
+# TODO: all this tasks should be done into a single transaction    
 def import_results(filename):
     with open(filename,'rt') as json_file:
         reAPI = results.ResultsAPI()
@@ -50,6 +50,21 @@ def import_results(filename):
                              'param_id': param.param_id})
         return run
     return None
+
+
+def export_results(filename, run_id):
+    ruAPI = runs.RunsAPI()
+    data = ruAPI.get_runs_data(run_id)
+    params = {}
+    for assoc in data.params:
+        params[assoc.param.name] = assoc.param.value
+    params['lsname'] = data.searcher.name
+    with open(filename,'wt') as json_file:
+        data.results.data['params'] = params
+        json_file.write(json.dumps(data.result.data))
+        return 1    # Success
+    return 0        # Fail
+
 
 
 def create_parameters(args):

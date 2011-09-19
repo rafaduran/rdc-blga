@@ -82,6 +82,12 @@ class RunsTableModel(core.QAbstractTableModel):
         return self.runs[index.row()].result_id
     
     
+    def get_run_id(self, index=None):
+        if not index:
+            return self.runs[0].run_id
+        return self.runs[index.row()].run_id
+    
+    
     def get_run_label_data(self, index=None):
         if not index:
             index = 0
