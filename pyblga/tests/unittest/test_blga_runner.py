@@ -25,7 +25,7 @@ class TestBlgaRunner(unittest.TestCase):
         self.kwargs = {'name': 'blga',
                       'itC': '10',
                       'nOff': '10',
-                      'blgaPopSize' : '100',
+                      'popSize' : '100',
                       'alfa': '7',
                       'numMates': '5',
                       'pamnass': '5',

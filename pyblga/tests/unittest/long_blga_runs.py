@@ -25,7 +25,7 @@ class LongBlgaRuns(tbr.TestBlgaRunner):
         """
         Runs a long time execution
         """
-        self.kwargs['blgaPopSize'] = '500'
+        self.kwargs['popSize'] = '500'
         self.kwargs['n'] = '10000'
         self.kwargs['functionNumber'] = '2'
         self.kwargs['endRun'] = '20'
@@ -38,7 +38,7 @@ class LongBlgaRuns(tbr.TestBlgaRunner):
         Runs a long time execution
         """
         self.kwargs['name'] = 'ClusteredClearing'
-        self.kwargs['blgaPopSize'] = '500'
+        self.kwargs['popSize'] = '500'
         self.kwargs['n'] = '10000'
         self.kwargs['functionNumber'] = '2'
         self.kwargs['clRadius'] =  '0.1'

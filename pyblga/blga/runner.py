@@ -38,7 +38,7 @@ def get_args(kwargs):
     else:
         raise ValueError('Unknown localSearch')
 
-    args.append(kwargs['blgaPopSize'])
+    args.append(kwargs['popSize'])
     if 'alfa' in kwargs:
         args.append(kwargs['alfa'])
     elif 'r' in kwargs:
