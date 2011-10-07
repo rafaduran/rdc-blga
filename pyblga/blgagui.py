@@ -11,6 +11,7 @@ Long description
 
 .. moduleauthor::"Rafael Durán Castañeda <rafadurancastaneda@gmail.com>"
 """
+from __future__ import unicode_literals
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..', 
@@ -19,7 +20,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.abspath(__file__), '..',
 import functools
 import platform
 import webbrowser
-#import logging
+import logging
+logging.disable(logging.INFO)
+logging.disable(logging.DEBUG)
 
 import sip
 sip.setapi('QString', 2) # utf-8
@@ -30,6 +33,8 @@ from PyQt4 import QtGui
 import pyblga.static.qrc_resources #@UnusedImport
 import pyblga.gui.models as models
 import pyblga.data.fileinout as data
+import pyblga.gui.dialogs.run_dialog as rdialog
+import pyblga.blga.runner as runner
 # TODO: add log widget
 # TODO: interface to ask which draws are available
 
@@ -120,8 +125,15 @@ class BlgaGUI(QtGui.QMainWindow):
    
     @QtCore.pyqtSlot()            
     def run(self):
-        pass
-    
+        dialog = rdialog.RunDialog(self)
+        if dialog.exec_():
+            options = dialog.options
+            options['numMates'] = '5'
+            result = runner.run(**options)
+            print("algo", result)
+        else:
+            print("rejected")
+        
     
     @QtCore.pyqtSlot()
     def import_from_file(self):
@@ -169,6 +181,7 @@ class BlgaGUI(QtGui.QMainWindow):
         vertical_layout.addWidget(self.results_table)
         grid_layout.addWidget(self.splitter, 0, 0, 1, 1)
         self.setCentralWidget(centralwidget)
+        
     
     def createMenu(self):
         """
