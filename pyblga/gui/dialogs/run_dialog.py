@@ -87,6 +87,7 @@ class RunDialog(QtGui.QDialog, template.Ui_RunDialog):
         self.options['endRun'] = unicode(self.endrun_spinbox.value())
         self.options['pamnass'] = unicode(self.pamnass_spinbox.value())
         self.options['rtsnass'] = unicode(self.rtsnass_spinbox.value())
+        self.options['numMates'] = unicode(self.mates_spinbox.value())
         super(RunDialog, self).accept()           
             
 

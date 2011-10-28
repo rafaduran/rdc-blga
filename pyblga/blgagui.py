@@ -128,7 +128,6 @@ class BlgaGUI(QtGui.QMainWindow):
         dialog = rdialog.RunDialog(self)
         if dialog.exec_():
             options = dialog.options
-            options['numMates'] = '5'
             result = runner.run(**options)
             print("algo", result)
         else:
@@ -140,7 +139,7 @@ class BlgaGUI(QtGui.QMainWindow):
         filename = QtGui.QFileDialog.getOpenFileName(parent=self, 
                 caption="Import from a file")
         _ = data.import_results(filename)
-        # TODO: check if None is returned and raise error when needed
+        # TODO: check if None is returned and raise error whenever is needed
         self.runs_model.reset()        
     
     
