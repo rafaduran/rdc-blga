@@ -6,7 +6,7 @@ DEST=${DEST_DIR:-`pwd`}
 
 # Getting dependencies PyQt dependencies
 sudo apt-get update
-sudo apt-get install -y libqt4-dev build-essential wget unzip python-virtualenv --force-yes
+sudo apt-get install -y libqt4-dev build-essential wget unzip python-dev python-virtualenv --force-yes
 # Getting other pyblga dependencies
 sudo apt-get install -y libsqlite3-dev --force-yes
 
