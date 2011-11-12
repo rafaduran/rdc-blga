@@ -30,3 +30,4 @@ executables
 *.sqlite3
 *.db
 pyblga/gui/dialogs/ui_run_dialog.py
+pyblga/.pyblga-venv/
