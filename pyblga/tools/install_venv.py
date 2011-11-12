@@ -2,7 +2,7 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 
 """
-Installation script for pyqts's development virtualenv
+Installation script for pyblgas's development virtualenv
 """
 
 import os
@@ -11,7 +11,7 @@ import sys
 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-VENV = os.path.join(ROOT, '.pyqt-venv')
+VENV = os.path.join(ROOT, '.pyblga-venv')
 PIP_REQUIRES = os.path.join(ROOT, 'tools', 'pip-requires')
 PY_VERSION = "python%s.%s" % (sys.version_info[0], sys.version_info[1])
 
@@ -59,7 +59,7 @@ def check_dependencies():
             print 'Installing virtualenv via easy_install...',
             if not (run_command(['which', 'easy_install']) and
                     run_command(['easy_install', 'virtualenv'])):
-                die('ERROR: virtualenv not found.\n\pyqt development'
+                die('ERROR: virtualenv not found.\n\pyblga development'
                     ' requires virtualenv, please install it using your'
                     ' favorite package management tool')
             print 'done.'
@@ -88,24 +88,24 @@ def install_dependencies(venv=VENV):
     run_command(['tools/with_venv.sh', 'pip', 'install', '-E', venv, '-r',
               PIP_REQUIRES], redirect_output=False)
 
-    # Tell the virtual env how to "import pyqt"
+    # Tell the virtual env how to "import pyblga"
     pthfile = os.path.join(venv, "lib", PY_VERSION, "site-packages",
-                        "pyqt.pth")
+                        "pyblga.pth")
     f = open(pthfile, 'w')
     f.write("%s\n" % ROOT)
 
 
 def print_help():
     help = """
-    pyqt development environment setup is complete.
+    pyblga development environment setup is complete.
 
-    pyqt development uses virtualenv to track and manage Python dependencies
+    pyblga development uses virtualenv to track and manage Python dependencies
     while in development and testing.
 
-    To activate the pyqt virtualenv for the extent of your current shell
+    To activate the pyblga virtualenv for the extent of your current shell
     session you can run:
 
-    $ source .pyqt-venv/bin/activate
+    $ source .pyblga-venv/bin/activate
 
     Or, if you prefer, you can run commands in the virtualenv on a case by case
     basis by running:

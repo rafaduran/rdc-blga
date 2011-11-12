@@ -1,4 +1,4 @@
 #!/bin/bash
 TOOLS=`dirname $0`
-VENV=$TOOLS/../.pyqt-venv
+VENV=$TOOLS/../.pyblga-venv
 source $VENV/bin/activate && $@
