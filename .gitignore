@@ -29,3 +29,4 @@ executables
 *qrc_*.py
 *.sqlite3
 *.db
+pyblga/.pyblga-venv/

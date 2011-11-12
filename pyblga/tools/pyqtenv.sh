@@ -4,9 +4,11 @@
 CONFIRM=${LICENSE:-""}
 DEST=${DEST_DIR:-`pwd`}
 
-# Getting dependencies
+# Getting dependencies PyQt dependencies
 sudo apt-get update
 sudo apt-get install -y libqt4-dev build-essential wget unzip python-virtualenv --force-yes
+# Getting other pyblga dependencies
+sudo apt-get install -y libsqlite3-dev --force-yes
 
 # Creating directory if it doesn't exists
 if [ ! -d $DEST ]; then
@@ -32,17 +34,17 @@ fi
 
 # Installing virtualenv for PyQt and activating it
 python tools/install_venv.py
-source .pyqt-venv/bin/activate
+source .pyblga-venv/bin/activate
 
 # Building and installing both sip and PyQt
 cd sip-4.13
-python configure.py --bindir ../.pyqt-venv/bin/ --destdir ../.pyqt-venv/lib/python2.7 --incdir ../.pyqt-venv/include/python2.7 --sipdir ../.pyqt-venv/usr/share/sip
+python configure.py --bindir ../.pyblga-venv/bin/ --destdir ../.pyblga-venv/lib/python2.7 --incdir ../.pyblga-venv/include/python2.7 --sipdir ../.pyqt-venv/usr/share/sip
 make
 sudo make install
 cd ../PyQt-x11-gpl-4.8.6/
 # You will be prompted during PyQt building unless you excplicitly confirm license
 # $export LICENSE=--confirm-license
-python configure.py --bindir ../.pyqt-venv/bin/ --destdir ../.pyqt-venv/lib/python2.7/site-packages/ --no-designer-plugin --sipdir ../.pyqt-venv/usr/share/sip/PyQt4 --no-qsci-api $CONFIRM
+python configure.py --bindir ../.pyblga-venv/bin/ --destdir ../.pyblga-venv/lib/python2.7/site-packages/ --no-designer-plugin --sipdir ../.pyblga-venv/usr/share/sip/PyQt4 --no-qsci-api $CONFIRM
 make
-make install
+sudo make install
 
