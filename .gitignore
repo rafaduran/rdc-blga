@@ -31,3 +31,5 @@ executables
 *.db
 pyblga/gui/dialogs/ui_run_dialog.py
 pyblga/.pyblga-venv/
+pyblga/PyQt-x11-gpl-4.8.6*
+pyblga/sip-4.13*
