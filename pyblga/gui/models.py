@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#reverse=(order==core.Qt.AscendingOrder),!/usr/bin/env python
 # -*- Encoding: utf-8 -*-
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
 """
@@ -161,8 +161,23 @@ class RunsTableModel(core.QAbstractTableModel):
                 return core.QVariant(self.columns[section-2])
             return core.QVariant()
         return core.QVariant()
-    
-    
+
+    def sort(self, column,order=core.Qt.AscendingOrder):
+        if not self.runs:
+            return
+        if column == RunsTableModel.SEARCHER_NAME:
+            self.runs.sort(reverse=(order==core.Qt.AscendingOrder),
+                    key=lambda run: self.sAPI.get_name(run.searcher_id).name)
+        elif column == RunsTableModel.SEARCHER_TAG:
+            self.runs.sort(reverse=(order==core.Qt.AscendingOrder),
+                    key=lambda run: self.sAPI.get_tag(run.searcher_id).tag)
+        elif 2 <= column < len(self.columns)+2:
+            self.runs.sort(reverse=(order==core.Qt.AscendingOrder),
+                    key= lambda run: self.ruAPI.get_param_by_name(run.run_id,
+                                            self.columns[column-2]))
+        super(RunsTableModel, self).reset()
+
+
 class ResultsTableModel(core.QAbstractTableModel):
     FITNESS = 0
     @error.model_error_wrapper
