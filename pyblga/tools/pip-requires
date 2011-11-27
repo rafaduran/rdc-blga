@@ -4,3 +4,6 @@ unittest2
 sqlalchemy>=0.7.0
 # SQLite
 pysqlite
+celery
+pep8
+pylint
