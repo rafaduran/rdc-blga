@@ -65,6 +65,7 @@ class BlgaGUI(QtGui.QMainWindow):
         self.runs_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
         self.results_table.setSelectionMode(QtGui.QTableView.SingleSelection)
         self.results_table.setSelectionBehavior(QtGui.QTableView.SelectRows)
+        self.results_table.setSortingEnabled(True)
         self.connect(self.runs_table.selectionModel(), 
             QtCore.SIGNAL("currentRowChanged(QModelIndex,QModelIndex)"),
             lambda x,y:self.update_results_table(x,y))

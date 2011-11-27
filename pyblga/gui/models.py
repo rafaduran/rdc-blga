@@ -242,4 +242,17 @@ class ResultsTableModel(core.QAbstractTableModel):
                 len(self.data[self.cur_run][self.cur_iter][0]['variables']):
                 return core.QVariant("Variable {0}".format(section-1))
             return core.QVariant()
-                
+
+    def sort(self, column,order=core.Qt.AscendingOrder):
+        if not self.data:
+            return
+
+        if column == ResultsTableModel.FITNESS:
+            self.data[self.cur_run][self.cur_iter].sort(
+                reverse=(order==core.Qt.AscendingOrder))
+        else:
+            self.data[self.cur_run][self.cur_iter].sort(
+                reverse=(order==core.Qt.AscendingOrder),
+                key=lambda resultdict: resultdict['variables'][str(column-1)])
+        self.reset()
+
